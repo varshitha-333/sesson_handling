@@ -82,7 +82,7 @@ All endpoints require the HTTP Header `X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD` for 
 
 ## Testing Guide (How to inspect, retrieve, and test sessions)
 
-Since the Neon database has been pre-seeded with dummy data, you can retrieve, slice, and inspect sessions easily using either the **Local URL** (`http://127.0.0.1:8000`) or the **Render Hosted URL** (e.g., `https://archie-backend.onrender.com`).
+Since the Neon database has been pre-seeded with dummy data, you can retrieve, slice, and inspect sessions easily using either the **Local URL** (`http://127.0.0.1:8000`) or the **Render Hosted URL** (`https://sesson-handling.onrender.com`).
 
 ### 1. Retrieve Active Sessions for a User
 To inspect the seeded sessions and retrieve active `session_id`s for a test user (e.g., `user_1`):
@@ -92,11 +92,11 @@ To inspect the seeded sessions and retrieve active `session_id`s for a test user
   ```
 * **Render Hosted API Request (curl):**
   ```bash
-  curl -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" "https://archie-backend.onrender.com/api/sessions/?user_id=user_1"
+  curl -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" "https://sesson-handling.onrender.com/api/sessions/?user_id=user_1"
   ```
 * **PowerShell (Render):**
   ```powershell
-  (Invoke-RestMethod -Uri "https://archie-backend.onrender.com/api/sessions/?user_id=user_1" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Get) | ConvertTo-Json -Depth 5
+  (Invoke-RestMethod -Uri "https://sesson-handling.onrender.com/api/sessions/?user_id=user_1" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Get) | ConvertTo-Json -Depth 5
   ```
 
 This will return a list of sessions. Copy any `session_id` from the response (e.g., `b18f0c3d-df78-4db5-b461-12f716618be2`).
@@ -109,11 +109,11 @@ Using the copied `session_id`, you can fetch the conversation history and canvas
   ```
 * **Render Hosted API Request (curl):**
   ```bash
-  curl -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" "https://archie-backend.onrender.com/api/sessions/{session_id}?limit=9"
+  curl -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" "https://sesson-handling.onrender.com/api/sessions/{session_id}?limit=9"
   ```
 * **PowerShell (Render):**
   ```powershell
-  (Invoke-RestMethod -Uri "https://archie-backend.onrender.com/api/sessions/{session_id}?limit=9" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Get) | ConvertTo-Json -Depth 5
+  (Invoke-RestMethod -Uri "https://sesson-handling.onrender.com/api/sessions/{session_id}?limit=9" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Get) | ConvertTo-Json -Depth 5
   ```
 
 ### 3. Forward the Latest 9 Turns to Socratic AI Interface Adapter
@@ -124,11 +124,11 @@ To test the controller proxy forwarding data to the AI interface adapter, post t
   ```
 * **Render Hosted API Request (curl):**
   ```bash
-  curl -X POST -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" "https://archie-backend.onrender.com/api/sessions/{session_id}/send"
+  curl -X POST -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" "https://sesson-handling.onrender.com/api/sessions/{session_id}/send"
   ```
 * **PowerShell (Render):**
   ```powershell
-  (Invoke-RestMethod -Uri "https://archie-backend.onrender.com/api/sessions/{session_id}/send" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Post) | ConvertTo-Json -Depth 5
+  (Invoke-RestMethod -Uri "https://sesson-handling.onrender.com/api/sessions/{session_id}/send" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Post) | ConvertTo-Json -Depth 5
   ```
 
 ### 4. Update Session Status
@@ -139,11 +139,11 @@ To mark a session as completed or toggle its status:
   ```
 * **Render Hosted API Request (curl):**
   ```bash
-  curl -X PATCH -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" -H "Content-Type: application/json" -d '{"status": "completed"}' "https://archie-backend.onrender.com/api/sessions/{session_id}"
+  curl -X PATCH -H "X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD" -H "Content-Type: application/json" -d '{"status": "completed"}' "https://sesson-handling.onrender.com/api/sessions/{session_id}"
   ```
 * **PowerShell (Render):**
   ```powershell
-  (Invoke-RestMethod -Uri "https://archie-backend.onrender.com/api/sessions/{session_id}" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Patch -Body '{"status": "completed"}' -ContentType "application/json") | ConvertTo-Json -Depth 5
+  (Invoke-RestMethod -Uri "https://sesson-handling.onrender.com/api/sessions/{session_id}" -Headers @{"X-API-Key"="JDIDJDNK_EKJEKEN_DDCEEDD"} -Method Patch -Body '{"status": "completed"}' -ContentType "application/json") | ConvertTo-Json -Depth 5
   ```
 
 ### 5. View All Pre-seeded Session IDs offline
@@ -155,7 +155,7 @@ Since CORS is configured using a dynamic regex pattern to support all web origin
 
 ```javascript
 // Example: Retrieve a user's sessions from any domain
-const API_URL = "https://archie-backend.onrender.com/api/sessions/?user_id=user_1";
+const API_URL = "https://sesson-handling.onrender.com/api/sessions/?user_id=user_1";
 const API_KEY = "JDIDJDNK_EKJEKEN_DDCEEDD";
 
 fetch(API_URL, {
