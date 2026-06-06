@@ -1,0 +1,5960 @@
+{
+  "users": [
+    {
+      "id": "user_1",
+      "name": "User 1",
+      "email": "user1@example.com",
+      "created_at": "2026-06-06T11:22:48.666802"
+    },
+    {
+      "id": "user_2",
+      "name": "User 2",
+      "email": "user2@example.com",
+      "created_at": "2026-06-06T11:22:48.666802"
+    },
+    {
+      "id": "user_3",
+      "name": "User 3",
+      "email": "user3@example.com",
+      "created_at": "2026-06-06T11:22:48.666802"
+    },
+    {
+      "id": "user_4",
+      "name": "User 4",
+      "email": "user4@example.com",
+      "created_at": "2026-06-06T11:22:48.666802"
+    },
+    {
+      "id": "user_5",
+      "name": "User 5",
+      "email": "user5@example.com",
+      "created_at": "2026-06-06T11:22:48.666802"
+    }
+  ],
+  "problems": [
+    {
+      "id": "design-dropbox",
+      "title": "Design Dropbox / Cloud Storage",
+      "description": "Design a file storage and syncing service like Dropbox or Google Drive.",
+      "requirements": [
+        "Upload, download, and delete files.",
+        "Sync files across multiple devices.",
+        "Support file versioning and history.",
+        "Offline file edits and automatic syncing."
+      ],
+      "constraints": [
+        "500 million registered users.",
+        "100 million active users daily.",
+        "Average file size: 10 MB."
+      ]
+    },
+    {
+      "id": "design-whatsapp",
+      "title": "Design WhatsApp / Chat Messenger",
+      "description": "Design a secure, real-time instant messaging service like WhatsApp.",
+      "requirements": [
+        "One-on-one and group messaging.",
+        "Message delivery receipts (sent, delivered, read).",
+        "Send media files (images, audio, videos).",
+        "Support offline delivery and end-to-end encryption."
+      ],
+      "constraints": [
+        "2 billion monthly active users.",
+        "100 billion messages sent daily.",
+        "Low latency connection persistence."
+      ]
+    },
+    {
+      "id": "design-yelp",
+      "title": "Design Yelp / Proximity Search",
+      "description": "Design a location-based local search service like Yelp or Google Maps.",
+      "requirements": [
+        "Add, update, and retrieve businesses profiles.",
+        "Search for nearby businesses within a given radius.",
+        "Support ratings, reviews, and photos.",
+        "Highly responsive geo-searching."
+      ],
+      "constraints": [
+        "100 million daily active users.",
+        "1 million businesses.",
+        "Average search queries: 50,000 per second."
+      ]
+    },
+    {
+      "id": "design-ticketmaster",
+      "title": "Design Ticketmaster / Ticket Booking",
+      "description": "Design a high-concurrency ticket purchasing platform like Ticketmaster.",
+      "requirements": [
+        "Browse events and search by city/date.",
+        "Reserve seats temporarily for checkout.",
+        "Purchase tickets securely.",
+        "Handle high-concurrency booking for popular events."
+      ],
+      "constraints": [
+        "10 million daily active users.",
+        "High peak demand (100,000 bookings/minute during pre-sales).",
+        "Strict double-booking prevention."
+      ]
+    },
+    {
+      "id": "design-rate-limiter",
+      "title": "Design a Rate Limiter",
+      "description": "Design an API rate limiter to throttle incoming traffic and prevent abuse.",
+      "requirements": [
+        "Limit requests based on IP or User ID.",
+        "Support configurable rules (e.g. 100 req/min).",
+        "Low latency check (< 2ms per API call).",
+        "Highly available and scalable across distributed nodes."
+      ],
+      "constraints": [
+        "1 billion total API calls per day.",
+        "Peak traffic: 50,000 queries per second.",
+        "Minimum memory consumption per user rule."
+      ]
+    },
+    {
+      "id": "design-web-crawler",
+      "title": "Design a Web Crawler",
+      "description": "Design a scalable system that crawls the web, parses HTML, and indexes links.",
+      "requirements": [
+        "Fetch web pages from a seed list of URLs.",
+        "Parse page content to extract outbound links.",
+        "Avoid duplicate crawls and circular loops.",
+        "Politeness compliance (robot.txt checks)."
+      ],
+      "constraints": [
+        "Crawling budget: 1 billion pages per month.",
+        "Raw HTML storage: petabytes of data.",
+        "Distinguish dynamic and static pages."
+      ]
+    },
+    {
+      "id": "design-key-value-store",
+      "title": "Design a Key-Value Store",
+      "description": "Design a distributed, highly available Key-Value store similar to Cassandra or Dynamo.",
+      "requirements": [
+        "Support put(key, value) and get(key) operations.",
+        "High write throughput and low latency.",
+        "Configurable consistency model (eventual vs strong).",
+        "Scalable data partitioning."
+      ],
+      "constraints": [
+        "10 million operations per second.",
+        "Data size: hundreds of terabytes.",
+        "Zero single point of failure."
+      ]
+    },
+    {
+      "id": "design-notification-system",
+      "title": "Design a Notification System",
+      "description": "Design a highly available notification service supporting SMS, email, and mobile push notifications.",
+      "requirements": [
+        "Support multi-channel notifications (Email, SMS, Mobile Push).",
+        "Ensure at-least-once message delivery.",
+        "Support user preferences (opt-outs, quiet hours).",
+        "Scale to millions of events per hour."
+      ],
+      "constraints": [
+        "100 million active users.",
+        "500 million notifications sent daily.",
+        "SMS/Email delivery latency < 10 seconds."
+      ]
+    },
+    {
+      "id": "design-distributed-cache",
+      "title": "Design a Distributed Cache",
+      "description": "Design a distributed in-memory cache system similar to Redis or Memcached.",
+      "requirements": [
+        "Support read/write caching operations.",
+        "Provide configurable eviction policies (LRU, LFU, TTL).",
+        "Consistent hashing to distribute cache keys.",
+        "High throughput with sub-millisecond response."
+      ],
+      "constraints": [
+        "10 million queries per second.",
+        "99.99% cache availability.",
+        "Scale storage memory dynamically."
+      ]
+    },
+    {
+      "id": "design-api-gateway",
+      "title": "Design an API Gateway",
+      "description": "Design a centralized entry point proxy for routing, authentication, and logging.",
+      "requirements": [
+        "Centralized endpoint routing to microservices.",
+        "Validate user authentication and authorization token header.",
+        "Log requests, metrics, and trace IDs.",
+        "Perform request modification and header forwarding."
+      ],
+      "constraints": [
+        "500 million API calls daily.",
+        "Sub-millisecond routing latency overhead.",
+        "Handle dynamic service discovery changes."
+      ]
+    },
+    {
+      "id": "design-tinder",
+      "title": "Design Tinder / Proximity Matchmaking",
+      "description": "Design a matchmaking system supporting card swiping, profiles, and instant chat matches.",
+      "requirements": [
+        "Show recommendation cards based on location, age, gender.",
+        "Process swipes (likes/dislikes) in real-time.",
+        "Create instant match when both users like each other.",
+        "Support low latency push matches notifications."
+      ],
+      "constraints": [
+        "50 million active users daily.",
+        "1 billion swiping interactions daily.",
+        "Instant matcher latency < 100 milliseconds."
+      ]
+    },
+    {
+      "id": "design-e-commerce",
+      "title": "Design Amazon Checkout / E-commerce",
+      "description": "Design a reliable and scalable e-commerce inventory and checkout system.",
+      "requirements": [
+        "Maintain accurate stock levels.",
+        "Process shopping cart checkout transactions.",
+        "Integrate secure payment transactions.",
+        "Handle flash-sale peak booking spikes."
+      ],
+      "constraints": [
+        "100 million registered users.",
+        "Peak checkout requests: 20,000 per second.",
+        "No overselling of limited inventory."
+      ]
+    },
+    {
+      "id": "design-url-shortener",
+      "title": "Design a URL Shortener",
+      "description": "Design a system like TinyURL that takes a long URL and generates a short link.",
+      "requirements": [
+        "Generate a unique short code for a given long URL.",
+        "Redirect users to the original URL when they access the short code.",
+        "Highly available and low latency redirection.",
+        "Custom short links should be supported."
+      ],
+      "constraints": [
+        "100 million new URLs generated per month.",
+        "10 billion URL redirections per month.",
+        "Read-to-Write ratio is 100:1."
+      ]
+    },
+    {
+      "id": "design-parking-lot",
+      "title": "Design a Parking Lot",
+      "description": "Design an Object-Oriented/System architecture for a multi-level parking lot.",
+      "requirements": [
+        "Support multiple sizes of parking spots (small, medium, large).",
+        "Support multiple levels/floors.",
+        "Track spot availability in real-time.",
+        "Accept payments at exit gates or automated kiosks."
+      ],
+      "constraints": [
+        "10,000 parking spots capacity.",
+        "Peak traffic of 500 arrivals/departures per hour.",
+        "Support automated ticket generation."
+      ]
+    },
+    {
+      "id": "design-twitter",
+      "title": "Design Twitter / Social Feed",
+      "description": "Design a social network service where users can publish posts, follow others, and view feeds.",
+      "requirements": [
+        "Publish new tweets to followers.",
+        "Display a timeline/news feed of followed users.",
+        "Support likes, retweets, and comments.",
+        "High availability and low latency feed generation."
+      ],
+      "constraints": [
+        "300 daily active users daily.",
+        "600 million tweets published per day.",
+        "Average follower count: 200 users."
+      ]
+    },
+    {
+      "id": "design-youtube",
+      "title": "Design YouTube / Video Streaming",
+      "description": "Design a scalable video-sharing service like YouTube or Netflix.",
+      "requirements": [
+        "Upload and convert videos into multiple resolutions.",
+        "Stream videos seamlessly with variable bandwidth.",
+        "Support likes, comments, and views count.",
+        "Highly available CDN integration."
+      ],
+      "constraints": [
+        "50 million active users daily.",
+        "10 million videos uploaded per day.",
+        "High download bandwidth (petabytes of data daily)."
+      ]
+    },
+    {
+      "id": "design-uber",
+      "title": "Design Uber / Ride-Hailing",
+      "description": "Design a location-aware matching service like Uber or Lyft.",
+      "requirements": [
+        "Real-time driver tracking.",
+        "Match riders with nearby available drivers.",
+        "Calculate ETA and route coordinates.",
+        "Handle fare calculations and payments."
+      ],
+      "constraints": [
+        "10 million daily active riders.",
+        "1 million active drivers.",
+        "Location updates from drivers every 3 seconds."
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": "e2b3ce29-3343-460c-ae0d-6d47dc16d59b",
+      "user_id": "user_1",
+      "problem_id": "design-dropbox",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "add7170c-0ef1-4131-bd18-d483f58fc098",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "1c763836-83ab-4835-b03b-d99420cdbd0c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "e72cb8b4-051b-4543-a99a-b08a0bc7f181",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "961e1782-99d1-43f4-9cbe-597c1fc3585f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "b40ce1e8-6eef-442e-bdbf-d0036d2810d3",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "27b7e2c5-b32c-4cd4-b872-8db41aaedac1",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "114864f4-51b9-4393-833d-b0e780ca4be3",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f7bb858d-5e04-450a-8270-c8177ece73bc",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "4b336e77-cbf3-40e4-a8ea-61daf11cdbe4",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "8ad7f5e1-da4c-4ba4-a57c-592619d50580",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "6d258ea8-1d46-4ad5-9b74-da1f6720323d",
+      "user_id": "user_1",
+      "problem_id": "design-whatsapp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "b2f3b76b-56af-4a54-8b5a-de4819030b76",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "268691f9-2887-41ce-981d-e3df7e671b8d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "5d84365f-d2a1-4e65-9c58-4ae0f84ca77c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4a1c6f3c-9ea8-4494-ab18-e1838f5bb430",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "e14ec921-d154-46c6-ad83-998c3f2e4f41",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "6936716c-b731-4225-9c37-6718b58aa803",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "5b2616be-3681-41d5-b655-783f4ae42a1e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d193144e-9c29-4382-bf45-04bfe7dfd985",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "4d742145-fc30-4a30-aecf-80629005af75",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "7fdc5ff1-9541-4cad-a0cf-9e10bd9fbf0e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "18fc4928-7430-4d81-8b33-172e1682e77c",
+      "user_id": "user_1",
+      "problem_id": "design-yelp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "0395e89e-491d-47e0-ad39-cffd2a59e1e7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ffdbb75a-087d-410f-9f86-1284798c9995",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "9f9a9dd2-9b22-44ad-baa8-cda70fa3ec80",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "74bdc955-aaca-4183-8e1f-fb5637f7eb89",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "cc81d422-4b20-402b-be96-456617d2213f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "bb6dae71-9e6c-400b-af44-0fd8fbcfe2f7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "7fc6295e-7ba1-49d6-8c55-0bf53e6c8ca5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "60d44945-4712-4060-96ab-af339b2069c0",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "6130c55e-fab9-4b9c-9c75-ea353c8f7999",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "8bb56464-0ad8-4876-bb0d-3532171a5ea4",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "ed431ce5-a577-49da-89da-320307be4a8d",
+      "user_id": "user_1",
+      "problem_id": "design-ticketmaster",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "79b814b0-67c5-41ed-aa16-408ea2fb65d2",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "babae9bf-c374-4d72-90bc-4ddd315fa648",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "40682aba-370f-4a5f-b2df-57a70f23a90d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "421f0dcc-f45c-4d82-a520-c11b5e9e72e8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "61a01f84-58c8-4ea4-b677-27ccf527be91",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "177cd8d5-eb07-4a29-9746-341cab56f7dc",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "0e5141b3-d554-4912-a561-9a95ff53cb57",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "dbffeef4-cca1-41ef-b15d-d2f3538d74ec",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "4bb2919b-ebdc-4440-bc00-4173d69eb4d9",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "5c495325-ee96-456c-86b2-335368c403c9",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "957964b1-6c5d-410f-b3b0-e726f1c5db28",
+      "user_id": "user_1",
+      "problem_id": "design-rate-limiter",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "9fbcbf64-d6a6-4a1e-a5c3-36cc6d24e0fd",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ac4318c0-d952-4ab3-81f0-a3acbb7fa96c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "1071931e-aaf3-402a-93f7-ce964152c7bb",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f960c7ae-0411-42ba-abc7-d212bfbfdf42",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "8d778c9b-8fa5-4931-bf36-d33c685a807a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "dca9e6d0-e695-4741-ab97-f9a9673e6e9f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "3a05201d-269a-4daf-b8e4-9f0310c028b2",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "792396e7-5abb-4ea3-b28b-a727d84df0ad",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "bc861451-fa1f-4047-8aef-93a26316e467",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "c83ac201-86c2-4696-834d-9db136c59493",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "d5f64915-9eac-4313-a8e4-638b9ba26d5b",
+      "user_id": "user_2",
+      "problem_id": "design-dropbox",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "a511edbd-8247-48fb-a658-f30e16a76b05",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "0f50fbf1-0cff-4e39-a0bb-fc9c6e379d7b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "8c18b483-335d-4727-bd59-9c0392de21b6",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "1d0a424c-5712-4d9a-a682-662188f6c799",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "90eafb2e-fe3f-4e16-964c-149dfadf99d3",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "fed7d62d-ef6e-4ac1-8be3-732a5c6cbf5a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "85438caa-3706-41c8-8895-ca5e366fe75c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "5e7dbb9a-1ee1-412b-b535-25e287fd66f2",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "4978f224-088f-4b75-95d2-975dcc31602e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "19889088-eed5-437e-918f-cb319f1c2e1a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "2aefc367-565e-473d-803f-5a9cae825136",
+      "user_id": "user_2",
+      "problem_id": "design-whatsapp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "e0714bcc-1d9d-4a29-839c-2852f85ff4fc",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "a4e15893-5a81-4d96-aa55-9ed3546fb099",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "f7883796-97b3-4626-bd59-1a4e1997a423",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4c1ce84b-281c-4b6b-97da-3ac8c5485521",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "86332bcc-6007-4637-b21c-189cfa46ffad",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "2dadf555-43bc-4e97-a0fd-c42aaa173eaf",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "f62aa6fd-07b1-4d8a-9c62-79ec543d232e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "0b5a0702-71b5-48d4-a899-aee17322214a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "212d6eb1-cf1e-4d85-ad66-6ef0e035bf60",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "650bf1cf-d6f8-4bfb-8db9-baa746e234ee",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "3305b262-e0b1-4eb2-b03f-867df4799291",
+      "user_id": "user_2",
+      "problem_id": "design-yelp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "3f672b65-45af-4ad7-ae44-fdcfd9880592",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "e2ae81f5-8e25-4d7b-a39b-dd7404855c2f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "2adc2cec-8935-43cd-99dd-0b7b3a3cb52d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "8f3f2968-c5a0-422c-b3b6-1cec6cd625c5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "79a3aa09-eddf-4035-840c-e1131f90850a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "05dabcf0-e07d-4c64-a7de-5fde4e7193cb",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "be580cd8-b9b7-41dc-a92b-87989302207f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "fcd1b353-cea4-4b4c-ab2b-e8b125bd9c21",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "45a09336-95a3-4af7-a09b-c04a26ef62b1",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4f903dd5-6ee6-45d2-be1d-0cbbb89d5a5f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "3ea7c722-a321-42cb-9a91-be4574c03376",
+      "user_id": "user_2",
+      "problem_id": "design-ticketmaster",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "bae5a1e6-55c2-4657-93f9-34719406284c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "8b266820-609e-4b82-bfb1-42f938668c62",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "7bf91535-29e9-4b8b-b22f-97361de8ceb4",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "e9fcfb02-b08b-4313-908a-5a6397fe82e5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "89549bf4-cc23-49f7-a359-90220baabf62",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "2abbc349-8653-4f51-870c-5eb17212b185",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "b761b2b0-417e-47c0-bda1-665deaea920d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f753d756-8a89-4e94-be10-f20e14ea766c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "0ffc6077-a9d3-46af-9a56-b17b68900c13",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "2765557e-6e50-47d9-9cd5-8ad77e8a9e3a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "0413756a-c79f-4289-bd47-4086cc90337a",
+      "user_id": "user_2",
+      "problem_id": "design-rate-limiter",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "f573553a-f285-40cf-bbc4-5066ac3c459c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "21574396-6e5d-4d4c-8c57-c62a68d813ba",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "94cf9e95-121b-48db-bf8d-f29083905c9d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "3bed5733-abda-404f-a4cf-e2407e893577",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "e17d9242-87d7-4196-8922-7f7acdea687e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "c85445b8-a917-4d76-8b38-e5547a52443b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "713d00eb-be39-4622-865b-10f4edc6e412",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "41640094-a90a-4fdb-bae5-2bf2bac8de12",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "3e542583-1589-45e5-bc9d-48033aabe20b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "beacc5f1-0d39-4898-a335-dcc54aed44a5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "8572e760-dc8b-4186-8131-15c54e9843f3",
+      "user_id": "user_3",
+      "problem_id": "design-dropbox",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "209094b5-8bb1-4ec6-80cf-4fdf397b28de",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d404538e-e646-4139-a953-c47eb2c33fe8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "7a555bc5-8e66-4d14-9135-c62692abc2c2",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ce1517a2-12b0-4a27-a323-9738721af53a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "39decbad-303d-4d4a-ada2-d6c1fa9ee4b1",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "1154d6aa-a106-4bb9-9ad0-03a483733f5c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "474175b4-f0e5-4807-b2c1-c7209b001c94",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9c054492-a2c9-4928-ba0d-f216e79a71ba",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "39f32a81-034c-405f-bd9c-f3c71e451d72",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "95ac2adc-baf5-4017-9878-6426be0c189a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "c54c45ea-0526-4bde-947a-a51ecc3202f0",
+      "user_id": "user_3",
+      "problem_id": "design-whatsapp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "ad0a602d-7bf8-45f0-a4cd-c554a671b754",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "c11bff5a-3323-442f-9b5f-18ad8585090d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "4f16b641-adbb-4625-9691-7cb1af50fae3",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "fdaa6b56-4806-4ec6-8580-6f4691905526",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "362dda8d-d568-4a6a-ae45-853516e2111b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9707168d-654c-49bf-94c7-86b98f376a62",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "0e9cbe50-06c7-4dbd-a7c5-108ec0bfbf6c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "66333db2-96d3-4b94-bf6f-49ca7a065c2c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "d696cd22-3db3-4a93-95c8-c710aae147de",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "579ec7bc-967d-447e-8f1d-e5b79c813614",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "9de49868-9ebb-4dc2-81ea-3a0982d03b7e",
+      "user_id": "user_3",
+      "problem_id": "design-yelp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "f3942671-78f4-49ae-a866-e055636eaf0c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "30989fb8-656c-4ed7-a9db-5e085a53a512",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "8d411d15-2810-44b7-bbd8-465c6b4dbe74",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "292f7d81-8f38-4fd2-8c23-dafe84cfb414",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "8273fdf1-946e-4ce7-babe-7e387a05e7e0",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9cb9111a-b18e-4b5b-8fa4-40e1f930182e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "59aa4ca7-1b6f-498f-9100-f512a3d34144",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "83a08a92-ab4e-494a-b7a8-a72ee4c2aa6b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "aa4fa64f-8f40-4d36-a9e8-975d6bc0024c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4ff80187-1b10-45e9-b239-32dbdeda6df9",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "a138ea37-5a80-46e1-bb1c-4f8f7ff6bbb9",
+      "user_id": "user_3",
+      "problem_id": "design-ticketmaster",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "daa81323-9e2d-47d0-b1b6-6db6de41fd7f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "e49f32b7-d150-4b9f-9dec-19d725cd707c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "9b3935a7-7717-4f97-a35e-2ae7410bd06e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "98cb78ab-718e-4ab6-89b9-ed4a92d1502c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "cf47cebe-3624-4859-9a7c-3ee0cc061a39",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "c8db995c-6416-41c5-95fe-33d2505f86fb",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "177d6328-1742-480c-8b66-1b42ce8362ab",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d4066ad0-9ba8-46f0-8cc4-60d0258f6665",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "a0f5a1e2-ed94-4284-926e-dcf9af8947d8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "7b01c96a-f2db-407f-af14-840472d4e5db",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "b874131b-d209-49e2-9e2a-4929b5510658",
+      "user_id": "user_3",
+      "problem_id": "design-rate-limiter",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "7324f1ab-59be-4d7a-a7a5-d58cf149d8ed",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9e939d65-63bd-4108-8586-394168441260",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "fd80f070-0db9-4166-81cf-e8d34dc7b84b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "0e04bbb0-2bac-4bd4-a004-add54a9b0e21",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "9767c9bc-8cb1-4aaf-901e-e64757c06748",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "3586e98b-feab-4dcc-8651-fd7c9cdc9cfc",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "ca35f747-9b07-46bd-9a2c-be9a208a9ad7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "956e4d80-b051-4c28-a19b-edc4da52f4f6",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "3cb146c6-7e6a-40c8-a31b-a051d8e0d24f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ae3e6f18-49f5-4509-bfa7-e65b10419da9",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "7d5dc225-a1c8-4d29-b04a-87f607c18718",
+      "user_id": "user_4",
+      "problem_id": "design-dropbox",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "8796b0ff-7283-4712-ae9e-deed3b038cba",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ee160586-45eb-419b-aa0f-8a141a4e8c13",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "a15eb494-2815-4f63-9112-4c5678ded9be",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "fed64763-a145-4900-b6b4-c277b41f32b5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "78ffaee7-26ba-4f72-ae97-877596fa895e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "3e681f82-139c-4d2c-9265-20553f3afba6",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "cd9158cc-5a70-4ce7-9b13-5a70824c92cb",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "b8b1b41a-93ac-4147-b327-45894808dd9e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "86a30447-6e0c-4455-92c1-e651465f4533",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f90867a5-bcc7-4b0e-b728-c08636a8e4f0",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "06e88897-916f-4f77-9dcd-960b7638908f",
+      "user_id": "user_4",
+      "problem_id": "design-whatsapp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "3d06c07a-6172-4d17-bf73-d05d3ad98360",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "55d2eb5c-9d5c-4b05-a46c-f2b01121b1fc",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "00de37dd-3cee-43f2-b342-826d9f7bfcf1",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9a758db9-aad7-42f9-b2d3-61140fe8eccf",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "c41c9896-3e25-4cd9-ac09-be02a2d3e76f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "e18b0129-7348-4455-a331-9448e695816b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "81f14d49-23a7-4d39-9a8f-62cffb383609",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "6302f51c-3da2-4504-aec9-c795cf7820ec",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "6a5e3507-73ad-481a-a356-d95d119f5f47",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ff205c8f-888d-481b-bf6e-97ed50fb6960",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "55334e26-2c59-4c5e-b9e9-957d729113c6",
+      "user_id": "user_4",
+      "problem_id": "design-yelp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "eef8a1d7-d93d-4202-a348-925bdeea97ab",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "750ea218-34b8-4a84-a308-3a49d2d3b354",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "c0fc07fb-a790-4b3a-b453-58b4b7418c88",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9aea1566-9f86-49d6-9bae-ce7247c7f99e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "06258fd4-3802-4246-b667-4aba4983a845",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "a69bd81b-955b-4778-9385-69f59f6e58f3",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "f6f91f41-b268-4d56-a4ae-4926f653f039",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4fd5eea2-a3b2-452b-98b7-2c24f1facc7c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "5669b671-2268-4f7b-a801-1e8b027fc7e0",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "69618850-4d2f-4788-b184-116c2b0fb747",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "5e87a6e0-183f-4760-81d9-a30f788dbca0",
+      "user_id": "user_4",
+      "problem_id": "design-ticketmaster",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "5b018814-1f20-4d8f-b48d-52986c59059e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "157a0e3d-243e-43f0-b1b9-099aa1f5d368",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "fdbd0956-8f00-4f4a-bd55-827f34f0d8aa",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "6beddba3-a48b-41dd-be27-78a07b66f11b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "73718236-2f13-44a3-8b6f-226ca4ae9b9e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "03e5a930-6c2f-4511-94ab-d5c23a46ca79",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "bce0d3d8-daef-4c96-b665-7b40b62c4b7f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f63834a8-c336-4ab8-b605-cec4ab68dc55",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "9a5924aa-8eab-41a0-85cc-7a3917909efd",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f2342326-1657-4684-8a0b-a62c38d0c650",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "eb369fdd-a5a7-4c80-b34b-5d6379548e7c",
+      "user_id": "user_4",
+      "problem_id": "design-rate-limiter",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "9fd81ed9-7276-46e1-853d-180ed844ac77",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "56fd4582-945a-4e94-9bea-6f01456026ed",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "d2efe17d-90c6-4464-9e59-4315409ac9c3",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "9a0b1208-e4c2-421b-adc5-ff8998bc6835",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "6e7d891d-206f-425e-b62e-98eb32742bce",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d0669c90-5a61-49ce-913f-b0e01338ba5e",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "157cb009-fef7-42d5-b8db-fee4425be059",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4e3ed3b5-376e-4d3d-83f6-f8e11df148dd",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "68a22069-411f-4327-be8d-1bcd7016fa85",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "211e45b5-66f0-4bc0-b748-8cb3e4af5615",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "848d91be-210d-44a8-bd55-02af086e70f2",
+      "user_id": "user_5",
+      "problem_id": "design-dropbox",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Dropbox / Cloud Storage.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "5148635b-48b8-4668-aff9-77e614fdeed7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "2ed64f0d-d026-4de9-8c1e-4f3506ab17f8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "c1b0d764-c666-496e-bfc6-38e0f687f9f4",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "4e1ceb02-8f52-4fe2-8812-1a5adeba0370",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "38982cae-166c-4b81-9ec3-9f39427ac436",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "0f5edcbb-e127-4bfd-9844-f4db24646eeb",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "e5ac55f2-4f0c-4752-a094-b0c76bfca690",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "686c9f5c-a63f-4af4-b8f3-55f57b8f94c5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "923e7419-e40d-4a2c-8a87-50ceda5e31aa",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "6b5d9121-f58e-4004-b42d-81cd3f07af1f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "7d685268-ec57-4f38-82c9-1fc6bd18f573",
+      "user_id": "user_5",
+      "problem_id": "design-whatsapp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design WhatsApp / Chat Messenger.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "863898cd-a54e-405d-89cd-70b2f5b0dcde",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d2b64d26-3a99-49ae-836c-5e6e0fe1b21a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "9fb620a7-351e-4b8e-8c99-1f40594290e4",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "5b9975e3-9190-448d-8831-a2010074d04a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "198dd6d5-7aa7-44fd-a3d2-ce7b24af36f7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "396cd5ed-56d9-424f-a887-a01d14d2f988",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "d03213cb-8b66-485d-bfb9-9f9003cf46d8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "7247fff6-1ac9-479a-b0cb-eb7c8074b114",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "02b1a988-80a2-4193-aafa-e650ac22647d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "084ba3de-77a8-46f5-9d4f-6ecf63ba779c",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "d04c4474-67e7-4911-8467-6d6787221ff0",
+      "user_id": "user_5",
+      "problem_id": "design-yelp",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Yelp / Proximity Search.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "d7dcbfeb-99bd-4f8c-984b-262984ca8aa5",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "932a164d-17a1-4ef6-ac10-8e1ddcfbd39d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "cf9c741e-debe-4712-896b-5bf74be8f949",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "fa723bf9-55c0-4190-84ab-57f21ab20aad",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "7fa45562-a406-4f21-8337-9c8ef0605edb",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "f18ef96a-a592-4d0b-9958-bcab549f1443",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "c6baf1dc-0031-4f5a-b833-f5f17d105678",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "64c3310e-80a9-463a-9c4b-2387b4b181aa",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "7c28beb2-270c-4194-836d-b211c48f809a",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "db494ea2-b820-450f-bb0f-4a1c67db1fdd",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "e27d96ca-487b-4668-8a5f-8582be9cc6c8",
+      "user_id": "user_5",
+      "problem_id": "design-ticketmaster",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design Ticketmaster / Ticket Booking.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "29667396-c360-41e8-880e-ef4b3ca78602",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d6af2202-861a-403f-9054-de635071e34f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "961aefb6-4305-4de1-9e0a-fa5248b237c6",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "78ab8e10-6ddc-4492-9a32-136b10a77ca9",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "4e336e11-50fd-458a-bb34-efa7112f305b",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "02b58236-bf05-4a7a-bdf3-bc5282d029f9",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "a06ddc40-c984-4544-af6f-a47db62096d0",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "00f40d8e-9177-49c7-8e9d-0a343122805d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "157c06ee-b130-4bce-b921-5f8809045d8f",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d8060413-9ab9-40e2-9121-32864daf8fa8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    },
+    {
+      "session_id": "1efd07d5-06d8-4348-b501-2b67ef1d4dce",
+      "user_id": "user_5",
+      "problem_id": "design-rate-limiter",
+      "status": "active",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "I am building block 1 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:32:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 1 in your design?",
+          "timestamp": "2026-06-06T10:37:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 2 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:42:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 2 in your design?",
+          "timestamp": "2026-06-06T10:47:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 3 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T10:52:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 3 in your design?",
+          "timestamp": "2026-06-06T10:57:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 4 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:02:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 4 in your design?",
+          "timestamp": "2026-06-06T11:07:49.945836+00:00"
+        },
+        {
+          "role": "user",
+          "content": "I am building block 5 for Design a Rate Limiter.",
+          "timestamp": "2026-06-06T11:12:49.945836+00:00"
+        },
+        {
+          "role": "assistant",
+          "content": "How will you handle scale for block 5 in your design?",
+          "timestamp": "2026-06-06T11:17:49.945836+00:00"
+        }
+      ],
+      "canvas_history": [
+        {
+          "turn_id": "9e299831-4ecc-4067-90c8-24519aba9218",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "0d409f90-860f-4f3a-b329-5f9ef61a3023",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-1-u",
+                "label": "User Block 1"
+              },
+              {
+                "id": "n-1-a",
+                "label": "Scale Cache 1"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-1-u",
+                "target": "n-1-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "3b326ac3-3ddd-4fca-be5b-2fd799a8a3c7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "8fcbf468-f0c5-45ab-a070-f36c0aaf1634",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-2-u",
+                "label": "User Block 2"
+              },
+              {
+                "id": "n-2-a",
+                "label": "Scale Cache 2"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-2-u",
+                "target": "n-2-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "d22615c5-461d-44a2-a290-9ad98321481d",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "d59aad9c-d8b8-4a6f-9444-2d513ac30994",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-3-u",
+                "label": "User Block 3"
+              },
+              {
+                "id": "n-3-a",
+                "label": "Scale Cache 3"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-3-u",
+                "target": "n-3-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "92791ee9-f9f2-4e62-9067-adc22af672f7",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "ffe3729e-c644-4d80-96c7-6f35c019fefa",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-4-u",
+                "label": "User Block 4"
+              },
+              {
+                "id": "n-4-a",
+                "label": "Scale Cache 4"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-4-u",
+                "target": "n-4-a"
+              }
+            ]
+          }
+        },
+        {
+          "turn_id": "95b6862e-7f64-4e60-a691-41ac3a3e8618",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              }
+            ],
+            "edges": []
+          }
+        },
+        {
+          "turn_id": "e89dcd0e-a8a5-47b5-a969-a2d2d27ba7d8",
+          "canvas_json": {
+            "nodes": [
+              {
+                "id": "n-5-u",
+                "label": "User Block 5"
+              },
+              {
+                "id": "n-5-a",
+                "label": "Scale Cache 5"
+              }
+            ],
+            "edges": [
+              {
+                "source": "n-5-u",
+                "target": "n-5-a"
+              }
+            ]
+          }
+        }
+      ],
+      "created_at": "2026-06-06T10:22:49.945836"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+# Ignore virtual environments
+.venv/
+.env
+# Ignore logs
+*.log
+tests
+reset_db.py
+test_batch.py
+test_endpoints.py
+upgrade_db.py
+drop_system_prompt.py
+export_database.py
+seed_all_problems.py
+seed_dummy_data.py
+upgrade_db_v2.py
+app/__pycache__/
+app/migrations/__pycache__/
+app/migrations/versions/__pycache__/    

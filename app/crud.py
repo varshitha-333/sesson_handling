@@ -1,0 +1,369 @@
+from sqlalchemy.orm import Session
+from app import models, schemas
+
+def get_problems(db: Session):
+    return db.query(models.Problem).all()
+
+def get_problem(db: Session, problem_id: str):
+    return db.query(models.Problem).filter(models.Problem.id == problem_id).first()
+
+def create_problem(db: Session, problem: schemas.ProblemCreate):
+    db_problem = models.Problem(
+        id=problem.id,
+        title=problem.title,
+        description=problem.description,
+        requirements=problem.requirements,
+        constraints=problem.constraints
+    )
+    db.add(db_problem)
+    db.commit()
+    db.refresh(db_problem)
+    return db_problem
+
+def get_user(db: Session, user_id: str):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
+def get_users(db: Session):
+    return db.query(models.User).all()
+
+def create_user(db: Session, user: schemas.UserCreate):
+    db_user = models.User(
+        id=user.id,
+        name=user.name,
+        email=user.email
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def create_session(db: Session, session_create: schemas.SessionCreate):
+    # Check if a session already exists for this user and problem
+    if session_create.user_id:
+        # Auto-create the user if they don't exist yet to prevent foreign key errors
+        user_exists = db.query(models.User).filter(models.User.id == session_create.user_id).first()
+        if not user_exists:
+            db_user = models.User(id=session_create.user_id)
+            db.add(db_user)
+            db.commit()
+
+        existing = db.query(models.Session).filter(
+            models.Session.user_id == session_create.user_id,
+            models.Session.problem_id == session_create.problem_id
+        ).first()
+        if existing:
+            return existing
+
+    db_session = models.Session(
+        problem_id=session_create.problem_id,
+        user_id=session_create.user_id,
+        status="active",
+        chat_history=[],
+        canvas_history=[]
+    )
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    return db_session
+
+def get_session(db: Session, session_id: str):
+    return db.query(models.Session).filter(models.Session.id == session_id).first()
+
+def get_sessions(db: Session, user_id: str = None, limit: int = None, offset: int = None):
+    query = db.query(models.Session)
+    if user_id:
+        query = query.filter(models.Session.user_id == user_id)
+    if offset is not None:
+        query = query.offset(offset)
+    if limit is not None:
+        query = query.limit(limit)
+    return query.all()
+
+def save_session(db: Session, db_session: models.Session):
+    db.commit()
+    db.refresh(db_session)
+    return db_session
+
+def seed_problems(db: Session):
+    # Only seed if no problems exist in catalog
+    if db.query(models.Problem).count() > 0:
+        return
+
+    sample_problems = [
+        models.Problem(
+            id="design-url-shortener",
+            title="Design a URL Shortener",
+            description="Design a system like TinyURL that takes a long URL and generates a short link.",
+            requirements=[
+                "Generate a unique short code for a given long URL.",
+                "Redirect users to the original URL when they access the short code.",
+                "Highly available and low latency redirection.",
+                "Custom short links should be supported."
+            ],
+            constraints=[
+                "100 million new URLs generated per month.",
+                "10 billion URL redirections per month.",
+                "Read-to-Write ratio is 100:1."
+            ]
+        ),
+        models.Problem(
+            id="design-parking-lot",
+            title="Design a Parking Lot",
+            description="Design an Object-Oriented/System architecture for a multi-level parking lot.",
+            requirements=[
+                "Support multiple sizes of parking spots (small, medium, large).",
+                "Support multiple levels/floors.",
+                "Track spot availability in real-time.",
+                "Accept payments at exit gates or automated kiosks."
+            ],
+            constraints=[
+                "10,000 parking spots capacity.",
+                "Peak traffic of 500 arrivals/departures per hour.",
+                "Support automated ticket generation."
+            ]
+        ),
+        models.Problem(
+            id="design-twitter",
+            title="Design Twitter / Social Feed",
+            description="Design a social network service where users can publish posts, follow others, and view feeds.",
+            requirements=[
+                "Publish new tweets to followers.",
+                "Display a timeline/news feed of followed users.",
+                "Support likes, retweets, and comments.",
+                "High availability and low latency feed generation."
+            ],
+            constraints=[
+                "300 daily active users daily.",
+                "600 million tweets published per day.",
+                "Average follower count: 200 users."
+            ]
+        ),
+        models.Problem(
+            id="design-youtube",
+            title="Design YouTube / Video Streaming",
+            description="Design a scalable video-sharing service like YouTube or Netflix.",
+            requirements=[
+                "Upload and convert videos into multiple resolutions.",
+                "Stream videos seamlessly with variable bandwidth.",
+                "Support likes, comments, and views count.",
+                "Highly available CDN integration."
+            ],
+            constraints=[
+                "50 million active users daily.",
+                "10 million videos uploaded per day.",
+                "High download bandwidth (petabytes of data daily)."
+            ]
+        ),
+        models.Problem(
+            id="design-uber",
+            title="Design Uber / Ride-Hailing",
+            description="Design a location-aware matching service like Uber or Lyft.",
+            requirements=[
+                "Real-time driver tracking.",
+                "Match riders with nearby available drivers.",
+                "Calculate ETA and route coordinates.",
+                "Handle fare calculations and payments."
+            ],
+            constraints=[
+                "10 million daily active riders.",
+                "1 million active drivers.",
+                "Location updates from drivers every 3 seconds."
+            ]
+        ),
+        models.Problem(
+            id="design-dropbox",
+            title="Design Dropbox / Cloud Storage",
+            description="Design a file storage and syncing service like Dropbox or Google Drive.",
+            requirements=[
+                "Upload, download, and delete files.",
+                "Sync files across multiple devices.",
+                "Support file versioning and history.",
+                "Offline file edits and automatic syncing."
+            ],
+            constraints=[
+                "500 million registered users.",
+                "100 million active users daily.",
+                "Average file size: 10 MB."
+            ]
+        ),
+        models.Problem(
+            id="design-whatsapp",
+            title="Design WhatsApp / Chat Messenger",
+            description="Design a secure, real-time instant messaging service like WhatsApp.",
+            requirements=[
+                "One-on-one and group messaging.",
+                "Message delivery receipts (sent, delivered, read).",
+                "Send media files (images, audio, videos).",
+                "Support offline delivery and end-to-end encryption."
+            ],
+            constraints=[
+                "2 billion monthly active users.",
+                "100 billion messages sent daily.",
+                "Low latency connection persistence."
+            ]
+        ),
+        models.Problem(
+            id="design-yelp",
+            title="Design Yelp / Proximity Search",
+            description="Design a location-based local search service like Yelp or Google Maps.",
+            requirements=[
+                "Add, update, and retrieve businesses profiles.",
+                "Search for nearby businesses within a given radius.",
+                "Support ratings, reviews, and photos.",
+                "Highly responsive geo-searching."
+            ],
+            constraints=[
+                "100 million daily active users.",
+                "1 million businesses.",
+                "Average search queries: 50,000 per second."
+            ]
+        ),
+        models.Problem(
+            id="design-ticketmaster",
+            title="Design Ticketmaster / Ticket Booking",
+            description="Design a high-concurrency ticket purchasing platform like Ticketmaster.",
+            requirements=[
+                "Browse events and search by city/date.",
+                "Reserve seats temporarily for checkout.",
+                "Purchase tickets securely.",
+                "Handle high-concurrency booking for popular events."
+            ],
+            constraints=[
+                "10 million daily active users.",
+                "High peak demand (100,000 bookings/minute during pre-sales).",
+                "Strict double-booking prevention."
+            ]
+        ),
+        models.Problem(
+            id="design-rate-limiter",
+            title="Design a Rate Limiter",
+            description="Design an API rate limiter to throttle incoming traffic and prevent abuse.",
+            requirements=[
+                "Limit requests based on IP or User ID.",
+                "Support configurable rules (e.g. 100 req/min).",
+                "Low latency check (< 2ms per API call).",
+                "Highly available and scalable across distributed nodes."
+            ],
+            constraints=[
+                "1 billion total API calls per day.",
+                "Peak traffic: 50,000 queries per second.",
+                "Minimum memory consumption per user rule."
+            ]
+        ),
+        models.Problem(
+            id="design-web-crawler",
+            title="Design a Web Crawler",
+            description="Design a scalable system that crawls the web, parses HTML, and indexes links.",
+            requirements=[
+                "Fetch web pages from a seed list of URLs.",
+                "Parse page content to extract outbound links.",
+                "Avoid duplicate crawls and circular loops.",
+                "Politeness compliance (robot.txt checks)."
+            ],
+            constraints=[
+                "Crawling budget: 1 billion pages per month.",
+                "Raw HTML storage: petabytes of data.",
+                "Distinguish dynamic and static pages."
+            ]
+        ),
+        models.Problem(
+            id="design-key-value-store",
+            title="Design a Key-Value Store",
+            description="Design a distributed, highly available Key-Value store similar to Cassandra or Dynamo.",
+            requirements=[
+                "Support put(key, value) and get(key) operations.",
+                "High write throughput and low latency.",
+                "Configurable consistency model (eventual vs strong).",
+                "Scalable data partitioning."
+            ],
+            constraints=[
+                "10 million operations per second.",
+                "Data size: hundreds of terabytes.",
+                "Zero single point of failure."
+            ]
+        ),
+        models.Problem(
+            id="design-notification-system",
+            title="Design a Notification System",
+            description="Design a highly available notification service supporting SMS, email, and mobile push notifications.",
+            requirements=[
+                "Support multi-channel notifications (Email, SMS, Mobile Push).",
+                "Ensure at-least-once message delivery.",
+                "Support user preferences (opt-outs, quiet hours).",
+                "Scale to millions of events per hour."
+            ],
+            constraints=[
+                "100 million active users.",
+                "500 million notifications sent daily.",
+                "SMS/Email delivery latency < 10 seconds."
+            ]
+        ),
+        models.Problem(
+            id="design-distributed-cache",
+            title="Design a Distributed Cache",
+            description="Design a distributed in-memory cache system similar to Redis or Memcached.",
+            requirements=[
+                "Support read/write caching operations.",
+                "Provide configurable eviction policies (LRU, LFU, TTL).",
+                "Consistent hashing to distribute cache keys.",
+                "High throughput with sub-millisecond response."
+            ],
+            constraints=[
+                "10 million queries per second.",
+                "99.99% cache availability.",
+                "Scale storage memory dynamically."
+            ]
+        ),
+        models.Problem(
+            id="design-api-gateway",
+            title="Design an API Gateway",
+            description="Design a centralized entry point proxy for routing, authentication, and logging.",
+            requirements=[
+                "Centralized endpoint routing to microservices.",
+                "Validate user authentication and authorization token header.",
+                "Log requests, metrics, and trace IDs.",
+                "Perform request modification and header forwarding."
+            ],
+            constraints=[
+                "500 million API calls daily.",
+                "Sub-millisecond routing latency overhead.",
+                "Handle dynamic service discovery changes."
+            ]
+        ),
+        models.Problem(
+            id="design-tinder",
+            title="Design Tinder / Proximity Matchmaking",
+            description="Design a matchmaking system supporting card swiping, profiles, and instant chat matches.",
+            requirements=[
+                "Show recommendation cards based on location, age, gender.",
+                "Process swipes (likes/dislikes) in real-time.",
+                "Create instant match when both users like each other.",
+                "Support low latency push matches notifications."
+            ],
+            constraints=[
+                "50 million active users daily.",
+                "1 billion swiping interactions daily.",
+                "Instant matcher latency < 100 milliseconds."
+            ]
+        ),
+        models.Problem(
+            id="design-e-commerce",
+            title="Design Amazon Checkout / E-commerce",
+            description="Design a reliable and scalable e-commerce inventory and checkout system.",
+            requirements=[
+                "Maintain accurate stock levels.",
+                "Process shopping cart checkout transactions.",
+                "Integrate secure payment transactions.",
+                "Handle flash-sale peak booking spikes."
+            ],
+            constraints=[
+                "100 million registered users.",
+                "Peak checkout requests: 20,000 per second.",
+                "No overselling of limited inventory."
+            ]
+        )
+    ]
+
+    for p in sample_problems:
+        db.add(p)
+    db.commit()
