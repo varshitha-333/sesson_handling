@@ -67,7 +67,7 @@ All endpoints require the HTTP Header `X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD` for 
     * `limit` (int): Return only the last N conversation turns/messages.
 * **POST `/api/sessions/{session_id}/turns`**
   * Sends a message and canvas state, streams back the interviewer's reply.
-  * Request Body: `{"message": "User text", "canvas_json": { "nodes": [], "edges": [] }}`
+  * Request Body: `{"text": "User text", "c1Snapshot": { "nodes": [], "edges": [] }}` (Note: The API schema expects `text` for the message and `c1Snapshot` for the canvas state).
 * **PATCH `/api/sessions/{session_id}`**
   * Updates the status of a session (e.g., setting it to `"completed"` or `"active"`).
   * Request Body: `{"status": "completed"}`
