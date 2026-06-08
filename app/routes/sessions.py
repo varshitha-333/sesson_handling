@@ -18,7 +18,7 @@ router = APIRouter(
 def map_session_to_response(session: models.Session, limit: Optional[int] = None) -> schemas.SessionResponse:
     # Ensure history elements conform to the schema
     history = []
-    for item in (session.chat_history or []):
+    for item in (session.history or []):
         history.append(
             schemas.Message(
                 role=item.get("role", ""),
@@ -28,7 +28,7 @@ def map_session_to_response(session: models.Session, limit: Optional[int] = None
         )
     
     canvas_snapshots = []
-    for item in (session.canvas_history or []):
+    for item in (session.canvas_snapshots or []):
         canvas_snapshots.append(
             schemas.CanvasSnapshot(
                 turn_id=item.get("turn_id", ""),
@@ -106,28 +106,28 @@ def post_turn(
     # 1. Update the chat history with user's message
     user_message = {
         "role": "user",
-        "content": turn_request.message,
+        "content": turn_request.text,
         "timestamp": timestamp_str
     }
-    updated_chat_history = list(session.chat_history or [])
+    updated_chat_history = list(session.history or [])
     updated_chat_history.append(user_message)
-    session.chat_history = updated_chat_history
+    session.history = updated_chat_history
     
     # 2. Update the canvas history with the canvas snapshot if provided
-    updated_canvas_history = list(session.canvas_history or [])
-    if turn_request.canvas_json is not None:
+    updated_canvas_history = list(session.canvas_snapshots or [])
+    if turn_request.c1Snapshot is not None:
         canvas_snapshot = {
             "turn_id": turn_id,
-            "canvas_json": turn_request.canvas_json
+            "canvas_json": turn_request.c1Snapshot
         }
         updated_canvas_history.append(canvas_snapshot)
-        session.canvas_history = updated_canvas_history
+        session.canvas_snapshots = updated_canvas_history
         
     # Save the user turn to PostgreSQL immediately
     db.commit()
     
     # Capture current history state for the streamer
-    history_for_interviewer = list(session.chat_history)
+    history_for_interviewer = list(session.history)
     
     async def sse_streamer():
         accumulated_text = ""
@@ -157,9 +157,9 @@ def post_turn(
                     "content": accumulated_text.strip(),
                     "timestamp": datetime.now(timezone.utc).isoformat()
                 }
-                current_chat = list(db_session.chat_history or [])
+                current_chat = list(db_session.history or [])
                 current_chat.append(assistant_message)
-                db_session.chat_history = current_chat
+                db_session.history = current_chat
                 db_new.commit()
         except Exception:
             db_new.rollback()
@@ -186,8 +186,8 @@ def send_session_to_ai(session_id: str, db: Session = Depends(get_db)):
         )
     
     # Retrieve the latest 9 messages and canvas snapshots
-    history = session.chat_history or []
-    canvas = session.canvas_history or []
+    history = session.history or []
+    canvas = session.canvas_snapshots or []
     
     # Take up to the last 9 elements
     latest_history = history[-9:] if len(history) > 9 else history

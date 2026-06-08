@@ -20,3 +20,8 @@ upgrade_db_v2.py
 app/__pycache__/
 app/migrations/__pycache__/
 app/migrations/versions/__pycache__/    
+migrate_column_names.py
+sample_session_response.json
+test_frontend_turn.py
+test_frontend_turns.py
+test_frontend_turns_with_response.py

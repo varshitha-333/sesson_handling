@@ -66,5 +66,5 @@ class SessionUpdate(BaseModel):
 
 # Post Turn Request Schema
 class TurnRequest(BaseModel):
-    message: str = Field(..., description="User message/reply")
-    canvas_json: Optional[Dict[str, Any]] = Field(None, description="Optional canvas diagram state snapshot")
+    text: str = Field(..., description="User message/reply")
+    c1Snapshot: Optional[Dict[str, Any]] = Field(None, description="Optional canvas diagram state snapshot")

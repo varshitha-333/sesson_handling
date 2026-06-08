@@ -37,8 +37,8 @@ class Session(Base):
     status = Column(String, nullable=False, default="active")
     
     # JSON history storage
-    chat_history = Column(JSON, nullable=False, default=list)
-    canvas_history = Column(JSON, nullable=False, default=list)
+    history = Column(JSON, nullable=False, default=list)
+    canvas_snapshots = Column(JSON, nullable=False, default=list)
     
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
 

@@ -58,8 +58,8 @@ def create_session(db: Session, session_create: schemas.SessionCreate):
         problem_id=session_create.problem_id,
         user_id=session_create.user_id,
         status="active",
-        chat_history=[],
-        canvas_history=[]
+        history=[],
+        canvas_snapshots=[]
     )
     db.add(db_session)
     db.commit()
