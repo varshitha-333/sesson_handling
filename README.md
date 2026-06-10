@@ -30,7 +30,18 @@ Stores practice sessions.
 * `canvas_history` (JSON): List of whiteboard canvas snapshots.
 * `created_at` (TIMESTAMP): Time of session creation.
 
+### 4. `feedback` Table
+Stores practice session feedback reports.
+* `id` (VARCHAR, Primary Key): Unique UUID string.
+* `session_id` (VARCHAR, Foreign Key -> `sessions.id`, Unique): The session associated with this feedback report.
+* `scores` (JSON): Dictionary containing rating values for the 5 dimensions (`requirements`, `scalability`, `reliability`, `communication`, `tradeoffs`).
+* `strengths` (JSON): List of strengths.
+* `improvements` (JSON): List of improvement areas.
+* `summary` (TEXT): Overall recommendation summary text.
+* `created_at` (TIMESTAMP): Time of feedback report generation.
+
 ---
+
 
 ## API Retrieval Endpoints
 
@@ -82,10 +93,10 @@ All endpoints require the HTTP Header `X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD` for 
   * Request Body: `{"session_id": "uuid", "problem": "Problem Title", "message": "Candidate message", "canvas_snapshot": {"nodes": [], "edges": []}}`
   * Action: Saves the candidate's turn and canvas snapshots, proxies the prompt to the AI Engine on port 8001, streams back the SSE responses, and saves the final AI response to PostgreSQL.
 
-### Layer 3: Assessment & Feedback (Persistence Only)
+### Layer 3: Assessment & Feedback
 * **POST `/api/sessions/{session_id}/feedback`**
-  * Receives raw assessment scores and summary from the client/frontend/AI engine, saves the report to the `feedback` table, and returns it.
-  * **Note**: No evaluation logic (`evaluator.py`) is run on the backend database repository. To use or modify the scoring/evaluation logic, clone the team's branch **`feature/feedback-module`** which contains the evaluation engine.
+  * Receives raw assessment scores and summary, saves the report to the `feedback` table, and returns it.
+  * **Note**: To use or modify the scoring/evaluation logic, clone the team's branch **`feature/feedback-module`** which contains the evaluation engine.
   * **Request Body**:
     ```json
     {
