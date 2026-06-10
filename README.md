@@ -76,7 +76,59 @@ All endpoints require the HTTP Header `X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD` for 
   * Forwards this payload to the Socratic AI Interface Adapter (the controller interface connecting to the AI).
   * Returns a success message containing the exact payload that was forwarded.
 
+### Combined Chat Proxy
+* **POST `/chat`**
+  * Primary entry point connecting the React frontend with the AI interviewer engine.
+  * Request Body: `{"session_id": "uuid", "problem": "Problem Title", "message": "Candidate message", "canvas_snapshot": {"nodes": [], "edges": []}}`
+  * Action: Saves the candidate's turn and canvas snapshots, proxies the prompt to the AI Engine on port 8001, streams back the SSE responses, and saves the final AI response to PostgreSQL.
+
+### Layer 3: Assessment & Feedback (Persistence Only)
+* **POST `/api/sessions/{session_id}/feedback`**
+  * Receives raw assessment scores and summary from the client/frontend/AI engine, saves the report to the `feedback` table, and returns it.
+  * **Note**: No evaluation logic (`evaluator.py`) is run on the backend database repository. To use or modify the scoring/evaluation logic, clone the team's branch **`feature/feedback-module`** which contains the evaluation engine.
+  * **Request Body**:
+    ```json
+    {
+      "scores": {
+        "requirements": 8,
+        "scalability": 9,
+        "reliability": 8,
+        "communication": 9,
+        "tradeoffs": 7
+      },
+      "strengths": [
+        "Good understanding of replication",
+        "Clear explanation of consistency tradeoffs"
+      ],
+      "improvements": [
+        "Could elaborate more on Redis partition handling"
+      ],
+      "summary": "The candidate has demonstrated strong technical knowledge of scaling and database replication."
+    }
+    ```
+  * **Response**:
+    ```json
+    {
+      "id": "uuid",
+      "session_id": "uuid",
+      "scores": {
+        "requirements": 8,
+        "scalability": 9,
+        "reliability": 8,
+        "communication": 9,
+        "tradeoffs": 7
+      },
+      "strengths": [...],
+      "improvements": [...],
+      "summary": "...",
+      "created_at": "2026-06-10T12:30:39.999553"
+    }
+    ```
+* **GET `/api/sessions/{session_id}/feedback`**
+  * Retrieves the saved feedback report for the session from the database.
+
 ---
+
 
 
 
@@ -162,5 +214,13 @@ fetch(API_URL, {
     console.error("CORS / Network Request Failed:", error);
   });
 ```
+
+### 7. Run Feedback Module Persistence Test Script
+A helper script is provided to verify the creation of sessions and POSTing/GETing of raw feedback data. It creates a dummy session with sample chat history containing system design questions, and then POSTs raw mock feedback to the database tables:
+* **Command:**
+  ```bash
+  python test_feedback.py
+  ```
+
 
 

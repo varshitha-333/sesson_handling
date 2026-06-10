@@ -45,3 +45,17 @@ class Session(Base):
     # Relationships
     problem = relationship("Problem", back_populates="sessions")
     user = relationship("User", back_populates="sessions")
+
+
+class Feedback(Base):
+    __tablename__ = "feedback"
+
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
+    session_id = Column(String, ForeignKey("sessions.id", ondelete="CASCADE"), nullable=False, unique=True)
+    scores = Column(JSON, nullable=False)  # dict: {requirements, scalability, reliability, communication, tradeoffs}
+    strengths = Column(JSON, nullable=False, default=list)  # list of strings
+    improvements = Column(JSON, nullable=False, default=list)  # list of strings
+    summary = Column(Text, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+
+    session = relationship("Session", backref="feedback_record")

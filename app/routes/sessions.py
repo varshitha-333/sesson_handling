@@ -225,3 +225,62 @@ def update_session(
     db.commit()
     db.refresh(session)
     return map_session_to_response(session)
+
+@router.post("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
+def save_session_feedback(
+    session_id: str,
+    feedback_in: schemas.FeedbackCreate,
+    db: Session = Depends(get_db)
+):
+    session = crud.get_session(db, session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Session with ID '{session_id}' not found."
+        )
+    
+    # Check if feedback already exists
+    existing = db.query(models.Feedback).filter(models.Feedback.session_id == session_id).first()
+    if existing:
+        existing.scores = feedback_in.scores.dict()
+        existing.strengths = feedback_in.strengths
+        existing.improvements = feedback_in.improvements
+        existing.summary = feedback_in.summary
+        db.commit()
+        db.refresh(existing)
+        return existing
+        
+    # Save feedback record to PostgreSQL
+    feedback_record = models.Feedback(
+        session_id=session_id,
+        scores=feedback_in.scores.dict(),
+        strengths=feedback_in.strengths,
+        improvements=feedback_in.improvements,
+        summary=feedback_in.summary
+    )
+    db.add(feedback_record)
+    db.commit()
+    db.refresh(feedback_record)
+    
+    return feedback_record
+
+
+@router.get("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
+def get_session_feedback(session_id: str, db: Session = Depends(get_db)):
+    # Verify session exists
+    session = crud.get_session(db, session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Session with ID '{session_id}' not found."
+        )
+        
+    # Retrieve feedback record
+    feedback_record = db.query(models.Feedback).filter(models.Feedback.session_id == session_id).first()
+    if not feedback_record:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Feedback report for session '{session_id}' has not been generated yet. Call POST to generate."
+        )
+        
+    return feedback_record

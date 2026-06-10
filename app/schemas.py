@@ -68,3 +68,31 @@ class SessionUpdate(BaseModel):
 class TurnRequest(BaseModel):
     text: str = Field(..., description="User message/reply")
     c1Snapshot: Optional[Dict[str, Any]] = Field(None, description="Optional canvas diagram state snapshot")
+
+
+# Feedback Schemas
+class FeedbackScores(BaseModel):
+    requirements: int
+    scalability: int
+    reliability: int
+    communication: int
+    tradeoffs: int
+
+class FeedbackCreate(BaseModel):
+    scores: FeedbackScores
+    strengths: List[str]
+    improvements: List[str]
+    summary: str
+
+class FeedbackResponse(BaseModel):
+    id: str
+    session_id: str
+    scores: FeedbackScores
+    strengths: List[str]
+    improvements: List[str]
+    summary: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
