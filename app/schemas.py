@@ -62,7 +62,8 @@ class SessionCreate(BaseModel):
 
 # Update Session Request Schema
 class SessionUpdate(BaseModel):
-    status: str = Field(..., description="New status value, e.g., 'active' or 'completed'")
+    status: Optional[str] = Field(None, description="New status value, e.g., 'active' or 'completed'")
+    canvas_state: Optional[Dict[str, Any]] = Field(None, description="Optional canvas layout snapshot containing node positions")
 
 # Post Turn Request Schema
 class TurnRequest(BaseModel):

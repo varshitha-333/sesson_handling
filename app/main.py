@@ -5,6 +5,7 @@ from app.database import engine, Base, verify_db_connection, SessionLocal
 from app import crud, models
 from app.config import settings
 from app.routes import problems, sessions, users
+from app.services.cache import session_cache
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -127,6 +128,7 @@ async def chat_endpoint(request: ChatRequestSchema, db: Session = Depends(get_db
         db_session.canvas_snapshots = current_snapshots
         
     db.commit()
+    session_cache.invalidate(f"session:{request.session_id}")
     
     # 4. Stream response from local AI engine (port 8001)
     async def sse_forwarder():
@@ -186,6 +188,7 @@ async def chat_endpoint(request: ChatRequestSchema, db: Session = Depends(get_db
                         current_hist.append(ai_msg)
                         session_in_db.history = current_hist
                         db_new.commit()
+                        session_cache.invalidate(f"session:{request.session_id}")
                 except Exception:
                     db_new.rollback()
                 finally:

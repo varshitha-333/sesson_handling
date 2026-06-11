@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas, security
 from app.database import get_db, SessionLocal
 from app.services.interviewer import InterviewerService
+from app.services.cache import session_cache
 
 router = APIRouter(
     prefix="/api/sessions",
@@ -59,7 +60,9 @@ def create_session(session_create: schemas.SessionCreate, db: Session = Depends(
             detail=f"Problem with ID '{session_create.problem_id}' not found."
         )
     session = crud.create_session(db, session_create)
-    return map_session_to_response(session)
+    response_data = map_session_to_response(session)
+    session_cache.set(f"session:{session.id}", response_data)
+    return response_data
 
 @router.get("/", response_model=List[schemas.SessionResponse])
 def read_sessions(
@@ -77,13 +80,33 @@ def read_session(
     limit: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
+    cache_key = f"session:{session_id}"
+    cached_response = session_cache.get(cache_key)
+    if cached_response is not None:
+        if limit is not None and limit > 0:
+            sliced_history = cached_response.history[-limit:]
+            sliced_snapshots = cached_response.canvas_snapshots[-limit:]
+            return schemas.SessionResponse(
+                session_id=cached_response.session_id,
+                user_id=cached_response.user_id,
+                status=cached_response.status,
+                history=sliced_history,
+                canvas_snapshots=sliced_snapshots
+            )
+        return cached_response
+
     session = crud.get_session(db, session_id)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Session with ID '{session_id}' not found."
         )
-    return map_session_to_response(session, limit=limit)
+    response_data = map_session_to_response(session)
+    session_cache.set(cache_key, response_data)
+    
+    if limit is not None and limit > 0:
+        return map_session_to_response(session, limit=limit)
+    return response_data
 
 @router.post("/{session_id}/turns")
 def post_turn(
@@ -125,6 +148,7 @@ def post_turn(
         
     # Save the user turn to PostgreSQL immediately
     db.commit()
+    session_cache.invalidate(f"session:{session_id}")
     
     # Capture current history state for the streamer
     history_for_interviewer = list(session.history)
@@ -161,6 +185,7 @@ def post_turn(
                 current_chat.append(assistant_message)
                 db_session.history = current_chat
                 db_new.commit()
+                session_cache.invalidate(f"session:{session_id}")
         except Exception:
             db_new.rollback()
         finally:
@@ -217,14 +242,36 @@ def update_session(
 ):
     session = crud.get_session(db, session_id)
     if not session:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Session with ID '{session_id}' not found."
+        # Create session if it doesn't exist (e.g. if canvas save arrives before chat initialization)
+        session = models.Session(
+            id=session_id,
+            problem_id="design-rate-limiter",
+            status="active",
+            history=[],
+            canvas_snapshots=[]
         )
-    session.status = session_update.status
+        db.add(session)
+        db.commit()
+        db.refresh(session)
+    
+    if session_update.status is not None:
+        session.status = session_update.status
+        
+    if session_update.canvas_state is not None:
+        # Append the new canvas layout containing node positions to the session history
+        new_snapshot = {
+            "turn_id": str(uuid.uuid4()),
+            "canvas_json": session_update.canvas_state
+        }
+        current_snapshots = list(session.canvas_snapshots or [])
+        current_snapshots.append(new_snapshot)
+        session.canvas_snapshots = current_snapshots
+        
     db.commit()
     db.refresh(session)
+    session_cache.invalidate(f"session:{session_id}")
     return map_session_to_response(session)
+
 
 @router.post("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
 def save_session_feedback(
