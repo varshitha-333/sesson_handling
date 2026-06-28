@@ -76,22 +76,23 @@ All endpoints require the HTTP Header `X-API-Key: JDIDJDNK_EKJEKEN_DDCEEDD` for 
   * Retrieves details for a specific problem.
 
 ### Administrative Catalog Control (Admin API)
-All administrative routes require the header `X-Admin-API-Key: WERNIDF-DSDFLEINC-DAKDLE` for authorization. Default author names are set to `admin` (or configured via `ADMIN_USERNAME`).
+All administrative routes require the header `X-Admin-API-Key: WERNIDF-DSDFLEINC-DAKDLE` for authorization. Additionally, you can pass an optional **`X-Admin-User`** header to log a custom username (e.g. `X-Admin-User: admin_1`) for blame tracking in `created_by`, `updated_by`, and audit logs. If omitted, the author falls back to the configured `ADMIN_USERNAME` (defaults to `admin`).
 
 #### 1. Create a System Design Problem (POST `/api/problems/`)
 Adds a new scenario/problem to the database catalog. Default status will be set to `"published"` unless otherwise specified.
 * **CURL Example:**
   ```bash
   curl -X POST -H "X-Admin-API-Key: WERNIDF-DSDFLEINC-DAKDLE" \
+       -H "X-Admin-User: admin_1" \
        -H "Content-Type: application/json" \
        -d '{
          "id": "design-tiktok-live",
          "title": "Design TikTok Live Stream",
          "description": "Design a system that allows users to stream live video to thousands of concurrent viewers.",
-         "requirements": ["Real-time video ingest", "Dynamic playback resolution", "Live chat chatrooms"],
-         "constraints": ["10 million active users daily", "Average streaming latency < 2s"],
+         "requirements": {"functional": "Real-time video ingest", "non_functional": "Average streaming latency < 2s"},
+         "constraints": ["10 million active daily users"],
          "difficulty": "Hard",
-         "category": "Streaming Systems",
+         "category": "Video Streaming",
          "estimated_time": 45,
          "status": "published"
        }' "https://sesson-handling.onrender.com/api/problems/"
@@ -103,6 +104,7 @@ Modifies selected columns of an existing problem.
 * **CURL Example:**
   ```bash
   curl -X PATCH -H "X-Admin-API-Key: WERNIDF-DSDFLEINC-DAKDLE" \
+       -H "X-Admin-User: admin_2" \
        -H "Content-Type: application/json" \
        -d '{
          "difficulty": "Medium",
