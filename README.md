@@ -6,58 +6,61 @@ Python backend built using FastAPI, SQLAlchemy, and PostgreSQL.
 
 ### 1. `users` Table
 Stores user accounts.
-* `id` (VARCHAR, Primary Key): Unique identifier (e.g. username or auth provider sub).
-* `name` (VARCHAR, Nullable): Display name.
-* `email` (VARCHAR, Unique, Nullable): Email address.
-* `created_at` (TIMESTAMP): Time of registration.
+* `id` (VARCHAR): **Required (Primary Key)** — Unique identifier (e.g., username or auth sub).
+* `name` (VARCHAR): **Nullable** — Display name.
+* `email` (VARCHAR): **Nullable (Unique)** — Email address.
+* `created_at` (TIMESTAMP): **Required (Default: Current Time)** — Time of registration.
 
 ### 2. `problems` Table
 Stores the system design problems catalog.
-* `id` (VARCHAR, Primary Key): Unique slug (e.g., `design-url-shortener`).
-* `title` (VARCHAR): Title of the system design question.
-* `description` (TEXT): Description of the question.
-* `requirements` (JSON): List of functional/non-functional requirements.
-* `constraints` (JSON): Scale constraints.
-* `difficulty` (VARCHAR): Difficulty level (e.g., `Easy`, `Medium`, `Hard`).
-* `category` (VARCHAR): Classification category (e.g., `System Design`).
-* `estimated_time` (INTEGER): Estimated time to complete in minutes.
-* `status` (VARCHAR): Catalog status (e.g., `published`, `draft`, or `archived`).
-* `version` (INTEGER): Incrementing schema version of the problem description.
-* `created_by` / `updated_by` (VARCHAR): Admin author tags tracking updates.
-* `created_at` / `updated_at` (TIMESTAMP): Creation and update timestamps.
+* `id` (VARCHAR): **Required (Primary Key)** — Unique slug (e.g., `design-url-shortener`).
+* `title` (VARCHAR): **Required** — Title of the system design question.
+* `description` (TEXT): **Required** — Description of the question.
+* `requirements` (JSON): **Required (Default: `{}`)** — Functional/non-functional requirements JSON object.
+* `constraints` (JSON): **Required (Default: `[]`)** — Scale constraints JSON list.
+* `difficulty` (VARCHAR): **Required (Default: `'Medium'`)** — Difficulty level (e.g., `Easy`, `Medium`, `Hard`).
+* `category` (VARCHAR): **Required (Default: `'System Design'`)** — Classification category (e.g., `System Design`).
+* `subcategory` (VARCHAR): **Nullable** — Specific subcategory designation.
+* `estimated_time` (INTEGER): **Required (Default: `45`)** — Estimated time to complete in minutes.
+* `status` (VARCHAR): **Required (Default: `'draft'`)** — Catalog status (`published`, `draft`, or `archived`).
+* `version` (INTEGER): **Required (Default: `1`)** — Incrementing schema version of the problem description.
+* `created_by` (VARCHAR): **Required (Default: `'system'`)** — Admin author who created the problem.
+* `updated_by` (VARCHAR): **Required (Default: `'system'`)** — Admin author who last updated the problem.
+* `created_at` (TIMESTAMP): **Required (Default: Current Time)** — Creation timestamp.
+* `updated_at` (TIMESTAMP): **Required (Default: Current Time)** — Update timestamp.
 
 ### 3. `sessions` Table
 Stores practice sessions.
-* `id` (VARCHAR, Primary Key): Unique UUID string.
-* `problem_id` (VARCHAR, Foreign Key -> `problems.id`): The problem associated with this session.
-* `user_id` (VARCHAR, Foreign Key -> `users.id`, Nullable): The user who owns this session.
-* `status` (VARCHAR): Status (`active` or `completed`).
-* `chat_history` (JSON): List of chat turns.
-* `canvas_history` (JSON): List of whiteboard canvas snapshots.
-* `created_at` (TIMESTAMP): Time of session creation.
+* `id` (VARCHAR): **Required (Primary Key)** — Unique UUID string.
+* `problem_id` (VARCHAR): **Required (Foreign Key -> `problems.id` on delete CASCADE)** — Associated problem.
+* `user_id` (VARCHAR): **Nullable (Foreign Key -> `users.id` on delete SET NULL)** — Owner of the session.
+* `status` (VARCHAR): **Required (Default: `'active'`)** — Status (`active` or `completed`).
+* `history` (JSON): **Required (Default: `[]`)** — List of chat turns.
+* `canvas_snapshots` (JSON): **Required (Default: `[]`)** — List of whiteboard canvas snapshots.
+* `created_at` (TIMESTAMP): **Required (Default: Current Time)** — Time of session creation.
 
 ### 4. `feedback` Table
-Stores practice session feedback reports.
-* `id` (VARCHAR, Primary Key): Unique UUID string.
-* `session_id` (VARCHAR, Foreign Key -> `sessions.id`, Unique): The session associated with this feedback report.
-* `scores` (JSON): Dictionary containing rating values for the 5 dimensions (`requirements`, `scalability`, `reliability`, `communication`, `tradeoffs`). Value ranges are integers 1 to 5.
-* `strengths` (JSON): List of strengths.
-* `improvements` (JSON): List of improvement areas.
-* `summary` (TEXT): Overall recommendation summary text.
-* `architecture_feedback` (JSON): Contains canvas-related feedback (components identified, single points of failure, missing components, architecture notes).
-* `communication_feedback` (JSON): Assessment of how clearly and deeply the candidate explained decisions and tradeoffs.
-* `feedback_metadata` (JSON): Metadata tracking turn counts, topics covered/remaining, and generation timestamps.
-* `created_at` (TIMESTAMP): Time of feedback report generation.
+Stores practice session feedback reports conforming to the C2 Feedback Contract.
+* `id` (VARCHAR): **Required (Primary Key)** — Unique UUID string.
+* `session_id` (VARCHAR): **Required (Foreign Key -> `sessions.id` on delete CASCADE, Unique)** — Associated session.
+* `scores` (JSON): **Required** — Rating values for the 5 dimensions.
+* `strengths` (JSON): **Required (Default: `[]`)** — List of strengths.
+* `improvements` (JSON): **Required (Default: `[]`)** — List of improvement areas.
+* `summary` (TEXT): **Required** — Overall recommendation summary text.
+* `architecture_feedback` (JSON): **Nullable** — Canvas feedback details (omitted/null if canvas is empty).
+* `communication_feedback` (JSON): **Required** — Assessment of candidate's communication quality.
+* `feedback_metadata` (JSON): **Required (Mapped to Postgres column named `"metadata"`)** — Evaluation metadata.
+* `created_at` (TIMESTAMP): **Required (Default: Current Time)** — Time of feedback generation.
 
 ### 5. `audit_logs` Table
-Tracks all administrative updates, modifications, or deletions made to the problems catalog.
-* `id` (VARCHAR, Primary Key): Unique UUID string.
-* `action` (VARCHAR): The CRUD action performed (`CREATE`, `UPDATE`, `DELETE`).
-* `target_id` (VARCHAR): The ID/slug of the affected problem. Decoupled from foreign keys so logs persist even after a hard delete.
-* `target_title` (VARCHAR, Nullable): The title of the problem.
-* `performed_by` (VARCHAR): Admin username who performed the action.
-* `details` (JSON, Nullable): Complete payload snapshot of the resource state.
-* `created_at` (TIMESTAMP): Timestamp of the logged event.
+Tracks administrative updates made to the problems catalog.
+* `id` (VARCHAR): **Required (Primary Key)** — Unique UUID string.
+* `action` (VARCHAR): **Required** — The CRUD action performed (`CREATE`, `UPDATE`, `DELETE`).
+* `target_id` (VARCHAR): **Required** — The ID/slug of the affected problem.
+* `target_title` (VARCHAR): **Nullable** — The title of the problem.
+* `performed_by` (VARCHAR): **Required** — Admin username who performed the action.
+* `details` (JSON): **Nullable** — Complete payload snapshot of the resource state delta.
+* `created_at` (TIMESTAMP): **Required (Default: Current Time)** — Timestamp of the logged event.
 
 #### Use Case: Administrative Audit Trails
 In an enterprise architecture, content curation needs a durable audit trail. If an administrator edits metadata or hard-deletes a scenario, the `audit_logs` table preserves a permanent log of who changed what, when they changed it, and what the old contents were, without being impacted by cascades.
