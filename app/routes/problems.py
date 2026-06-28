@@ -1,8 +1,9 @@
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app import crud, schemas, security
 from app.database import get_db
+from app.config import settings
 
 router = APIRouter(
     prefix="/api/problems",
@@ -48,7 +49,8 @@ def read_problem(
 def create_problem(
     problem_in: schemas.ProblemCreate,
     db: Session = Depends(get_db),
-    admin_key: str = Depends(security.verify_admin_key)
+    admin_key: str = Depends(security.verify_admin_key),
+    x_admin_user: Optional[str] = Header(None, alias="X-Admin-User")
 ):
     existing = crud.get_problem(db, problem_in.id)
     if existing:
@@ -56,14 +58,16 @@ def create_problem(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Problem with ID '{problem_in.id}' already exists."
         )
-    return crud.create_problem(db, problem_in)
+    creator = x_admin_user or settings.ADMIN_USERNAME
+    return crud.create_problem(db, problem_in, creator=creator)
 
 @router.patch("/{problem_id}", response_model=schemas.ProblemResponse)
 def update_problem(
     problem_id: str,
     problem_update: schemas.ProblemUpdate,
     db: Session = Depends(get_db),
-    admin_key: str = Depends(security.verify_admin_key)
+    admin_key: str = Depends(security.verify_admin_key),
+    x_admin_user: Optional[str] = Header(None, alias="X-Admin-User")
 ):
     problem = crud.get_problem(db, problem_id)
     if not problem:
@@ -71,13 +75,15 @@ def update_problem(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Problem with ID '{problem_id}' not found."
         )
-    return crud.update_problem(db, problem_id, problem_update)
+    updater = x_admin_user or settings.ADMIN_USERNAME
+    return crud.update_problem(db, problem_id, problem_update, updater=updater)
 
 @router.delete("/{problem_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_problem(
     problem_id: str,
     db: Session = Depends(get_db),
-    admin_key: str = Depends(security.verify_admin_key)
+    admin_key: str = Depends(security.verify_admin_key),
+    x_admin_user: Optional[str] = Header(None, alias="X-Admin-User")
 ):
     problem = crud.get_problem(db, problem_id)
     if not problem:
@@ -85,5 +91,6 @@ def delete_problem(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Problem with ID '{problem_id}' not found."
         )
-    crud.delete_problem(db, problem_id)
+    performed_by = x_admin_user or settings.ADMIN_USERNAME
+    crud.delete_problem(db, problem_id, performed_by=performed_by)
     return None
