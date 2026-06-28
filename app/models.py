@@ -16,6 +16,7 @@ class Problem(Base):
     # Metadata & Auditing columns
     difficulty = Column(String, nullable=False, default="Medium")
     category = Column(String, nullable=False, default="General", index=True)
+    subcategory = Column(String, nullable=True)
     estimated_time = Column(Integer, nullable=False, default=45)
     status = Column(String, nullable=False, default="published", index=True)
     version = Column(Integer, nullable=False, default=1)

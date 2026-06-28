@@ -27,6 +27,7 @@ class ProblemBase(BaseModel):
     constraints: List[str] = Field(default_factory=list)
     difficulty: str = "Medium"
     category: str = "General"
+    subcategory: Optional[str] = None
     estimated_time: int = 45
     status: str = "published"
 
@@ -40,6 +41,7 @@ class ProblemUpdate(BaseModel):
     constraints: Optional[List[str]] = None
     difficulty: Optional[str] = None
     category: Optional[str] = None
+    subcategory: Optional[str] = None
     estimated_time: Optional[int] = None
     status: Optional[str] = None
 

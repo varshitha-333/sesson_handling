@@ -33,6 +33,7 @@ def create_problem(db: Session, problem: schemas.ProblemCreate, creator: str = "
         constraints=problem.constraints,
         difficulty=problem.difficulty,
         category=problem.category,
+        subcategory=problem.subcategory,
         estimated_time=problem.estimated_time,
         status=problem.status,
         version=1,
@@ -51,6 +52,7 @@ def create_problem(db: Session, problem: schemas.ProblemCreate, creator: str = "
             "title": problem.title,
             "difficulty": problem.difficulty,
             "category": problem.category,
+            "subcategory": problem.subcategory,
             "estimated_time": problem.estimated_time,
             "status": problem.status
         }
