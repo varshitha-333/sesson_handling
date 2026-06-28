@@ -126,6 +126,14 @@ class CommunicationFeedback(BaseModel):
     depth: str
     tradeoff_discussion: str
 
+class FeedbackMetadata(BaseModel):
+    session_id: str
+    problem_id: str
+    turn_count: int
+    topics_covered: List[str] = Field(default_factory=list)
+    topics_remaining: List[str] = Field(default_factory=list)
+    generated_at: str
+
 class FeedbackCreate(BaseModel):
     scores: FeedbackScores
     strengths: List[str]
@@ -134,7 +142,7 @@ class FeedbackCreate(BaseModel):
     # NEW: Optional fields corresponding to the C2 feedback contract
     architecture_feedback: Optional[ArchitectureFeedback] = None
     communication_feedback: Optional[CommunicationFeedback] = None
-    feedback_metadata: Optional[Dict[str, Any]] = Field(None, alias="metadata")
+    feedback_metadata: Optional[FeedbackMetadata] = Field(None, alias="metadata")
 
 class FeedbackResponse(BaseModel):
     id: str
@@ -146,10 +154,11 @@ class FeedbackResponse(BaseModel):
     # NEW: Optional fields corresponding to the C2 feedback contract
     architecture_feedback: Optional[ArchitectureFeedback] = None
     communication_feedback: Optional[CommunicationFeedback] = None
-    feedback_metadata: Optional[Dict[str, Any]] = Field(None, alias="metadata")
+    feedback_metadata: Optional[FeedbackMetadata] = Field(None, alias="metadata")
     created_at: datetime
 
     class Config:
         from_attributes = True
         populate_by_name = True
+
 

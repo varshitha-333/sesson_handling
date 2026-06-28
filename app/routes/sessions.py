@@ -311,7 +311,7 @@ def map_feedback_to_response(feedback: models.Feedback) -> schemas.FeedbackRespo
         summary=feedback.summary,
         architecture_feedback=schemas.ArchitectureFeedback(**feedback.architecture_feedback) if feedback.architecture_feedback else None,
         communication_feedback=schemas.CommunicationFeedback(**feedback.communication_feedback) if feedback.communication_feedback else None,
-        feedback_metadata=feedback.feedback_metadata,
+        feedback_metadata=schemas.FeedbackMetadata(**feedback.feedback_metadata) if feedback.feedback_metadata else None,
         created_at=feedback.created_at
     )
 
