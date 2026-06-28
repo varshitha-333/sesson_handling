@@ -112,11 +112,27 @@ class FeedbackScores(BaseModel):
     communication: int
     tradeoffs: int
 
+# NEW: Structure definitions for contract sub-schemas
+class ArchitectureFeedback(BaseModel):
+    components_identified: int
+    single_points_of_failure: List[str] = Field(default_factory=list)
+    missing_components: List[str] = Field(default_factory=list)
+    architecture_notes: str
+
+class CommunicationFeedback(BaseModel):
+    clarity: str
+    depth: str
+    tradeoff_discussion: str
+
 class FeedbackCreate(BaseModel):
     scores: FeedbackScores
     strengths: List[str]
     improvements: List[str]
     summary: str
+    # NEW: Optional fields corresponding to the C2 feedback contract
+    architecture_feedback: Optional[ArchitectureFeedback] = None
+    communication_feedback: Optional[CommunicationFeedback] = None
+    feedback_metadata: Optional[Dict[str, Any]] = Field(None, alias="metadata")
 
 class FeedbackResponse(BaseModel):
     id: str
@@ -125,8 +141,13 @@ class FeedbackResponse(BaseModel):
     strengths: List[str]
     improvements: List[str]
     summary: str
+    # NEW: Optional fields corresponding to the C2 feedback contract
+    architecture_feedback: Optional[ArchitectureFeedback] = None
+    communication_feedback: Optional[CommunicationFeedback] = None
+    feedback_metadata: Optional[Dict[str, Any]] = Field(None, alias="metadata")
     created_at: datetime
 
     class Config:
         from_attributes = True
+        populate_by_name = True
 

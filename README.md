@@ -40,10 +40,13 @@ Stores practice sessions.
 Stores practice session feedback reports.
 * `id` (VARCHAR, Primary Key): Unique UUID string.
 * `session_id` (VARCHAR, Foreign Key -> `sessions.id`, Unique): The session associated with this feedback report.
-* `scores` (JSON): Dictionary containing rating values for the 5 dimensions (`requirements`, `scalability`, `reliability`, `communication`, `tradeoffs`).
+* `scores` (JSON): Dictionary containing rating values for the 5 dimensions (`requirements`, `scalability`, `reliability`, `communication`, `tradeoffs`). Value ranges are integers 1 to 5.
 * `strengths` (JSON): List of strengths.
 * `improvements` (JSON): List of improvement areas.
 * `summary` (TEXT): Overall recommendation summary text.
+* `architecture_feedback` (JSON): Contains canvas-related feedback (components identified, single points of failure, missing components, architecture notes).
+* `communication_feedback` (JSON): Assessment of how clearly and deeply the candidate explained decisions and tradeoffs.
+* `feedback_metadata` (JSON): Metadata tracking turn counts, topics covered/remaining, and generation timestamps.
 * `created_at` (TIMESTAMP): Time of feedback report generation.
 
 ### 5. `audit_logs` Table
@@ -187,50 +190,52 @@ Standard candidate listings are accessed using the client header `X-API-Key: JDI
   * Request Body: `{"session_id": "uuid", "problem": "Problem Title", "message": "Candidate message", "canvas_snapshot": {"nodes": [], "edges": []}}`
   * Action: Saves the candidate's turn and canvas snapshots, proxies the prompt to the AI Engine on port 8001, streams back the SSE responses, and saves the final AI response to PostgreSQL.
 
-### Layer 3: Assessment & Feedback
+### Layer 3: Assessment & Feedback (Persistence Only)
 * **POST `/api/sessions/{session_id}/feedback`**
-  * Receives raw assessment scores and summary, saves the report to the `feedback` table, and returns it.
-  * **Note**: To use or modify the scoring/evaluation logic, clone the team's branch **`feature/feedback-module`** which contains the evaluation engine.
+  * Receives the full generated feedback report conforming to the locked C2 Feedback Contract, saves the report to PostgreSQL, and returns it.
   * **Request Body**:
     ```json
     {
       "scores": {
-        "requirements": 8,
-        "scalability": 9,
-        "reliability": 8,
-        "communication": 9,
-        "tradeoffs": 7
+        "requirements": 4,
+        "scalability": 3,
+        "reliability": 2,
+        "communication": 5,
+        "tradeoffs": 3
       },
       "strengths": [
-        "Good understanding of replication",
-        "Clear explanation of consistency tradeoffs"
+        "Clearly defined API schemas",
+        "Analyzed data model tradeoffs"
       ],
       "improvements": [
-        "Could elaborate more on Redis partition handling"
+        "Address load balancer bottlenecks",
+        "Introduce async task message queueing"
       ],
-      "summary": "The candidate has demonstrated strong technical knowledge of scaling and database replication."
-    }
-    ```
-  * **Response**:
-    ```json
-    {
-      "id": "uuid",
-      "session_id": "uuid",
-      "scores": {
-        "requirements": 8,
-        "scalability": 9,
-        "reliability": 8,
-        "communication": 9,
-        "tradeoffs": 7
+      "summary": "The candidate has a solid grasp of basic architecture, but must explore system reliability.",
+      "architecture_feedback": {
+        "components_identified": 6,
+        "single_points_of_failure": ["API Server is a SPOF"],
+        "missing_components": ["Message Queue"],
+        "architecture_notes": "The database layout is structured, but a message queue is missing for async worker processing."
       },
-      "strengths": [...],
-      "improvements": [...],
-      "summary": "...",
-      "created_at": "2026-06-10T12:30:39.999553"
+      "communication_feedback": {
+        "clarity": "Explanations were descriptive and clear.",
+        "depth": "Depth was strong on db details, but weak on network components.",
+        "tradeoff_discussion": "Discussed CAP tradeoffs, but did not discuss SQL vs NoSQL comparisons."
+      },
+      "metadata": {
+        "session_id": "session-uuid",
+        "problem_id": "design-url-shortener",
+        "turn_count": 3,
+        "topics_covered": ["Database Schema", "CAP Theorem"],
+        "topics_remaining": ["Sharding", "Reliability"],
+        "generated_at": "2026-06-28T12:00:00Z"
+      }
     }
     ```
+  * **Response**: Returns the exact schema of the POST body with `id` and `created_at` fields populated.
 * **GET `/api/sessions/{session_id}/feedback`**
-  * Retrieves the saved feedback report for the session from the database.
+  * Retrieves the saved C2 feedback report for the session from the database.
 
 ---
 

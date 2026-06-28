@@ -8,7 +8,9 @@ __pycache__
 # Ignore logs
 *.log
 database_dump.json
-tests
+test
+*test
+test2
 reset_db.py
 test_batch.py
 test_endpoints.py

@@ -300,6 +300,22 @@ def update_session(
     return map_session_to_response(session)
 
 
+def map_feedback_to_response(feedback: models.Feedback) -> schemas.FeedbackResponse:
+    # Explicit mapping helper to bypass SQLAlchemy metadata keyword conflict
+    return schemas.FeedbackResponse(
+        id=feedback.id,
+        session_id=feedback.session_id,
+        scores=schemas.FeedbackScores(**feedback.scores),
+        strengths=feedback.strengths,
+        improvements=feedback.improvements,
+        summary=feedback.summary,
+        architecture_feedback=schemas.ArchitectureFeedback(**feedback.architecture_feedback) if feedback.architecture_feedback else None,
+        communication_feedback=schemas.CommunicationFeedback(**feedback.communication_feedback) if feedback.communication_feedback else None,
+        feedback_metadata=feedback.feedback_metadata,
+        created_at=feedback.created_at
+    )
+
+
 @router.post("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
 def save_session_feedback(
     session_id: str,
@@ -320,9 +336,12 @@ def save_session_feedback(
         existing.strengths = feedback_in.strengths
         existing.improvements = feedback_in.improvements
         existing.summary = feedback_in.summary
+        existing.architecture_feedback = feedback_in.architecture_feedback.dict() if feedback_in.architecture_feedback else None
+        existing.communication_feedback = feedback_in.communication_feedback.dict() if feedback_in.communication_feedback else None
+        existing.feedback_metadata = feedback_in.feedback_metadata
         db.commit()
         db.refresh(existing)
-        return existing
+        return map_feedback_to_response(existing)
         
     # Save feedback record to PostgreSQL
     feedback_record = models.Feedback(
@@ -330,13 +349,16 @@ def save_session_feedback(
         scores=feedback_in.scores.dict(),
         strengths=feedback_in.strengths,
         improvements=feedback_in.improvements,
-        summary=feedback_in.summary
+        summary=feedback_in.summary,
+        architecture_feedback=feedback_in.architecture_feedback.dict() if feedback_in.architecture_feedback else None,
+        communication_feedback=feedback_in.communication_feedback.dict() if feedback_in.communication_feedback else None,
+        feedback_metadata=feedback_in.feedback_metadata
     )
     db.add(feedback_record)
     db.commit()
     db.refresh(feedback_record)
     
-    return feedback_record
+    return map_feedback_to_response(feedback_record)
 
 
 @router.get("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
@@ -345,7 +367,7 @@ def get_session_feedback(session_id: str, db: Session = Depends(get_db)):
     session = crud.get_session(db, session_id)
     if not session:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_444_NOT_FOUND if hasattr(status, "HTTP_444_NOT_FOUND") else status.HTTP_404_NOT_FOUND,
             detail=f"Session with ID '{session_id}' not found."
         )
         
@@ -357,4 +379,4 @@ def get_session_feedback(session_id: str, db: Session = Depends(get_db)):
             detail=f"Feedback report for session '{session_id}' has not been generated yet. Call POST to generate."
         )
         
-    return feedback_record
+    return map_feedback_to_response(feedback_record)
