@@ -139,10 +139,11 @@ class FeedbackCreate(BaseModel):
     strengths: List[str]
     improvements: List[str]
     summary: str
-    # NEW: Optional fields corresponding to the C2 feedback contract
+    # Optional: omitted or null when canvas is None
     architecture_feedback: Optional[ArchitectureFeedback] = None
-    communication_feedback: Optional[CommunicationFeedback] = None
-    feedback_metadata: Optional[FeedbackMetadata] = Field(None, alias="metadata")
+    # Mandatory C2 contract fields
+    communication_feedback: CommunicationFeedback
+    feedback_metadata: FeedbackMetadata = Field(..., alias="metadata")
 
 class FeedbackResponse(BaseModel):
     id: str
@@ -151,14 +152,16 @@ class FeedbackResponse(BaseModel):
     strengths: List[str]
     improvements: List[str]
     summary: str
-    # NEW: Optional fields corresponding to the C2 feedback contract
+    # Optional: omitted or null when canvas is None
     architecture_feedback: Optional[ArchitectureFeedback] = None
-    communication_feedback: Optional[CommunicationFeedback] = None
-    feedback_metadata: Optional[FeedbackMetadata] = Field(None, alias="metadata")
+    # Mandatory C2 contract fields
+    communication_feedback: CommunicationFeedback
+    feedback_metadata: FeedbackMetadata = Field(..., alias="metadata")
     created_at: datetime
 
     class Config:
         from_attributes = True
         populate_by_name = True
+
 
 
