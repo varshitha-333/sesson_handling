@@ -10,7 +10,7 @@ class Problem(Base):
     id = Column(String, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(Text, nullable=False)
-    requirements = Column(JSON, nullable=False, default=list)
+    requirements = Column(JSON, nullable=False, default=dict)
     constraints = Column(JSON, nullable=False, default=list)
 
     # Metadata & Auditing columns

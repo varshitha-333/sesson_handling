@@ -23,7 +23,7 @@ class ProblemBase(BaseModel):
     id: str = Field(..., description="Unique slug for the problem, e.g., 'design-parking-lot'")
     title: str
     description: str
-    requirements: List[str] = Field(default_factory=list)
+    requirements: Dict[str, str] = Field(default_factory=dict)
     constraints: List[str] = Field(default_factory=list)
     difficulty: str = "Medium"
     category: str = "General"
@@ -37,7 +37,7 @@ class ProblemCreate(ProblemBase):
 class ProblemUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    requirements: Optional[List[str]] = None
+    requirements: Optional[Dict[str, str]] = None
     constraints: Optional[List[str]] = None
     difficulty: Optional[str] = None
     category: Optional[str] = None
