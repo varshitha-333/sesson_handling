@@ -85,7 +85,7 @@ class Feedback(Base):
     # NEW fields to support the locked C2 Feedback Contract (renamed database column to avoid conflict)
     architecture_feedback = Column(JSON, nullable=True)
     communication_feedback = Column(JSON, nullable=True)
-    feedback_metadata = Column(JSON, nullable=True)
+    feedback_metadata = Column("metadata", JSON, nullable=True)
     
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
 
