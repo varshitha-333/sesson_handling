@@ -338,7 +338,7 @@ def save_session_feedback(
         existing.summary = feedback_in.summary
         existing.architecture_feedback = feedback_in.architecture_feedback.dict() if feedback_in.architecture_feedback else None
         existing.communication_feedback = feedback_in.communication_feedback.dict() if feedback_in.communication_feedback else None
-        existing.feedback_metadata = feedback_in.feedback_metadata
+        existing.feedback_metadata = feedback_in.feedback_metadata.dict() if feedback_in.feedback_metadata else None
         db.commit()
         db.refresh(existing)
         return map_feedback_to_response(existing)
@@ -352,7 +352,7 @@ def save_session_feedback(
         summary=feedback_in.summary,
         architecture_feedback=feedback_in.architecture_feedback.dict() if feedback_in.architecture_feedback else None,
         communication_feedback=feedback_in.communication_feedback.dict() if feedback_in.communication_feedback else None,
-        feedback_metadata=feedback_in.feedback_metadata
+        feedback_metadata=feedback_in.feedback_metadata.dict() if feedback_in.feedback_metadata else None
     )
     db.add(feedback_record)
     db.commit()
