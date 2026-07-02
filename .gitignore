@@ -1,0 +1,30 @@
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+# Ignore virtual environments
+.venv/
+.env
+# Ignore logs
+*.log
+database_dump.json
+test
+*test
+test2
+reset_db.py
+test_batch.py
+test_endpoints.py
+upgrade_db.py
+drop_system_prompt.py
+export_database.py
+seed_all_problems.py
+seed_dummy_data.py
+upgrade_db_v2.py
+app/__pycache__/
+app/migrations/__pycache__/
+app/migrations/versions/__pycache__/    
+migrate_column_names.py
+sample_session_response.json
+test_frontend_turn.py
+test_frontend_turns.py
+test_frontend_turns_with_response.py
