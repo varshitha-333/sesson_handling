@@ -1,11 +1,48 @@
 from datetime import datetime, timezone
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app import models, schemas
+
+
+def _get_or_create_lookup(db: Session, table: str, name: str) -> int:
+    """Return the integer id for a lookup-table row, inserting if absent.
+
+    Works with any simple (id SERIAL PK, name TEXT UNIQUE) lookup table
+    used by the normalized Neon schema (categories, companies, interview_rounds).
+    Using raw SQL keeps this independent of SQLAlchemy model definitions for
+    those tables.
+    """
+    row = db.execute(
+        text(f"SELECT id FROM {table} WHERE name = :n"), {"n": name}
+    ).fetchone()
+    if row:
+        return row[0]
+    # Insert if not present (ON CONFLICT to handle races)
+    result = db.execute(
+        text(
+            f"INSERT INTO {table} (name) VALUES (:n) "
+            f"ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name "
+            f"RETURNING id"
+        ),
+        {"n": name},
+    ).fetchone()
+    db.flush()  # make the ID visible within this transaction
+    return result[0]
+
 
 def get_problem(db: Session, problem_id: str):
     return db.query(models.Problem).filter(models.Problem.id == problem_id).first()
 
+
 def create_problem(db: Session, problem: schemas.ProblemCreate, creator: str = "admin"):
+    # Resolve normalized FK IDs required by the live Neon DB schema.
+    # get-or-create so the caller doesn't need to know the lookup table contents.
+    category_id       = _get_or_create_lookup(db, "categories",      problem.category)
+    company_name      = problem.company or "Practice"
+    company_id        = _get_or_create_lookup(db, "companies",        company_name)
+    round_name        = problem.meta.interview_round or "Backend Round"
+    interview_round_id = _get_or_create_lookup(db, "interview_rounds", round_name)
+
     db_problem = models.Problem(
         id=problem.id,
         title=problem.title,
@@ -27,7 +64,13 @@ def create_problem(db: Session, problem: schemas.ProblemCreate, creator: str = "
         sources=problem.meta.sources,
         version=1,
         created_by=creator,
-        updated_by=creator
+        updated_by=creator,
+        # Normalized FK columns required by live Neon DB (NOT NULL).
+        # Kept in sync with the text columns above.
+        category_id=category_id,
+        company_id=company_id,
+        interview_round_id=interview_round_id,
+        estimated_time_minutes=problem.estimated_time,
     )
     db.add(db_problem)
 

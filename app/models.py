@@ -29,10 +29,18 @@ class Problem(Base):
     difficulty = Column(String, nullable=False, default="Medium", index=True)
     category = Column(String, nullable=False, default="General", index=True)
     subcategory = Column(String, nullable=True)
-    estimated_time = Column(Integer, nullable=False, default=45)  # minutes
+    estimated_time = Column(Integer, nullable=True, default=45)  # minutes (legacy name)
     # Live Neon column is NOT NULL DEFAULT 'Practice' — keep the model compatible
-    company = Column(String, nullable=False, default="Practice", index=True)
+    company = Column(String, nullable=True, default="Practice", index=True)
     status = Column(String, nullable=False, default="published", index=True)
+
+    # Normalized FK columns — present on the live Neon DB (NOT NULL there).
+    # Kept nullable here so dev/SQLite flows still work without lookup tables.
+    category_id        = Column(Integer, nullable=True, index=True)
+    company_id         = Column(Integer, nullable=True, index=True)
+    interview_round_id = Column(Integer, nullable=True)
+    estimated_time_minutes = Column(Integer, nullable=True, default=45)
+
 
     # Meta (learning context)
     interview_round = Column(String, nullable=True)  # e.g. "phone-screen", "onsite"
