@@ -49,6 +49,7 @@ def map_session_to_response(session: models.Session, limit: Optional[int] = None
         session_id=session.id,
         user_id=session.user_id,
         problem_id=session.problem_id,
+        created_at=session.created_at,
         status=session.status,
         history=history,
         canvas_snapshots=canvas_snapshots
@@ -94,6 +95,7 @@ def read_session(
                 session_id=cached_response.session_id,
                 user_id=cached_response.user_id,
                 problem_id=cached_response.problem_id,
+                created_at=cached_response.created_at,
                 status=cached_response.status,
                 history=sliced_history,
                 canvas_snapshots=sliced_snapshots

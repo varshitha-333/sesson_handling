@@ -54,7 +54,7 @@ class UserResponse(UserBase):
 
 
 # ---------------------------------------------------------------------------
-# Problem Schemas (new catalog schema: base + meta + stats)
+# Problem Schemas (new catalog schema: normalized lookups + flat stats)
 # ---------------------------------------------------------------------------
 
 class ProblemMeta(BaseModel):
@@ -180,6 +180,7 @@ class SessionResponse(BaseModel):
     session_id: str
     user_id: Optional[str] = None
     problem_id: Optional[str] = None
+    created_at: Optional[datetime] = None
     status: str = Field("active", description="active|paused|completed|cancelled|abandoned|expired")
     history: List[Message]
     canvas_snapshots: List[CanvasSnapshot]

@@ -1,4 +1,4 @@
-"""Neon production adoption: backfill flat problem meta/stats columns from the
+"""Neon production adoption: backfill flat problem metadata + stats columns from the
 pre-existing JSONB `meta`/`stats` columns, add missing indexes and checks.
 
 PostgreSQL-only logic is dialect-guarded; on SQLite (dev) this is a no-op

@@ -1,0 +1,143 @@
+Live Railway Endpoint Smoke Test Results
+Base URL: https://web-production-3b743.up.railway.app
+Auth header used: X-API-Key
+
+{
+  "name": "health",
+  "method": "GET",
+  "url": "https://web-production-3b743.up.railway.app/health",
+  "status_code": 200,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Mon, 06 Jul 2026 12:29:09 GMT",
+    "server": "railway-hikari",
+    "x-railway-request-id": "_bFExbH4Tmyf-uR1Y53eZw",
+    "content-length": "15",
+    "x-hikari-trace": "sin1.98a6",
+    "x-railway-edge": "sin1",
+    "connection": "keep-alive"
+  },
+  "body": {
+    "status": "ok"
+  },
+  "error": null
+}
+
+{
+  "name": "health_db",
+  "method": "GET",
+  "url": "https://web-production-3b743.up.railway.app/health/db",
+  "status_code": 200,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Mon, 06 Jul 2026 12:29:11 GMT",
+    "server": "railway-hikari",
+    "x-railway-request-id": "FDlJKYx3SlmVOwcbljLL4A",
+    "content-length": "38",
+    "x-hikari-trace": "sin1.98a6",
+    "x-railway-edge": "sin1",
+    "connection": "keep-alive"
+  },
+  "body": {
+    "status": "ok",
+    "database": "connected"
+  },
+  "error": null
+}
+
+{
+  "name": "problems_api",
+  "method": "GET",
+  "url": "https://web-production-3b743.up.railway.app/api/v1/problems/?limit=1",
+  "status_code": 500,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Mon, 06 Jul 2026 12:29:12 GMT",
+    "server": "railway-hikari",
+    "x-railway-request-id": "CFig0BE6R-STRElQ9I3ezw",
+    "content-length": "92",
+    "x-hikari-trace": "sin1.98a6",
+    "x-railway-edge": "sin1",
+    "connection": "keep-alive"
+  },
+  "body": {
+    "error": {
+      "code": "INTERNAL_ERROR",
+      "message": "An unexpected error occurred.",
+      "details": null
+    }
+  },
+  "error": null
+}
+
+{
+  "name": "problems_alias",
+  "method": "GET",
+  "url": "https://web-production-3b743.up.railway.app/api/problems/?limit=1",
+  "status_code": 500,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Mon, 06 Jul 2026 12:29:12 GMT",
+    "server": "railway-hikari",
+    "x-railway-request-id": "3z_P1jBiT3OsILz_ljLL4A",
+    "content-length": "92",
+    "x-hikari-trace": "sin1.98a6",
+    "x-railway-edge": "sin1",
+    "connection": "keep-alive"
+  },
+  "body": {
+    "error": {
+      "code": "INTERNAL_ERROR",
+      "message": "An unexpected error occurred.",
+      "details": null
+    }
+  },
+  "error": null
+}
+
+{
+  "name": "daily_challenge",
+  "method": "GET",
+  "url": "https://web-production-3b743.up.railway.app/api/v1/problems/daily-challenge",
+  "status_code": 500,
+  "headers": {
+    "content-type": "application/json",
+    "date": "Mon, 06 Jul 2026 12:29:13 GMT",
+    "server": "railway-hikari",
+    "x-railway-request-id": "damegf2ZR_-8fTtoljLL4A",
+    "content-length": "92",
+    "x-hikari-trace": "sin1.98a6",
+    "x-railway-edge": "sin1",
+    "connection": "keep-alive"
+  },
+  "body": {
+    "error": {
+      "code": "INTERNAL_ERROR",
+      "message": "An unexpected error occurred.",
+      "details": null
+    }
+  },
+  "error": null
+}
+
+{
+  "name": "chat",
+  "method": "POST",
+  "url": "https://web-production-3b743.up.railway.app/chat",
+  "status_code": 200,
+  "headers": {
+    "content-type": "text/event-stream; charset=utf-8",
+    "date": "Mon, 06 Jul 2026 12:29:14 GMT",
+    "server": "railway-hikari",
+    "x-railway-request-id": "8L4fBv6uTUqbwrA2ljLL4A",
+    "x-ratelimit-limit": "120",
+    "x-ratelimit-remaining": "119",
+    "transfer-encoding": "chunked",
+    "x-hikari-trace": "sin1.98a6",
+    "x-railway-edge": "sin1",
+    "connection": "keep-alive"
+  },
+  "body": "data: {\"error\": \"Failed to connect to AI Engine: All connection attempts failed\"}\n\ndata: [DONE]\n\n",
+  "error": null
+}
+

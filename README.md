@@ -87,7 +87,15 @@ audit_logs (standalone — survives deletes)
 | Table | Purpose |
 |---|---|
 | `users` | User accounts (`id` PK, `name`, `email` UQ, `created_at`). |
-| `problems` | Problem catalog. Base fields (`title`, `description`, `requirements` JSON, `constraints` JSON, `difficulty`, `category`, `subcategory`, `estimated_time`, `company`, `status`, `version`, `created_by/updated_by`, timestamps) + **meta** (`interview_round`, `key_concepts` JSON, `similar_problems` JSON, `why_this_problem`, `what_youll_learn` JSON, `next_level_problems` JSON, `sources` JSON) + **stats** (`attempts`, `completions`, `success_rate`, `avg_rating`, `rating_count`, `bookmark_count`, `avg_attempts_to_solve`) maintained by the engine. |
+| `problems` | Problem catalog. Base fields (`title`, `description`, `difficulty`, `status`, `version`, `created_by/updated_by`, `created_at`, `updated_at`) plus normalized metadata and lookups: `category_id`, `company_id`, `interview_round_id`, `estimated_time_minutes`, `requirements_functional` JSON, `requirements_deliverables` JSON, `constraints_non_functional` JSON, `why_this_problem` TEXT, `what_youll_learn` TEXT, and denormalized engine stats (`attempts`, `completions`, `success_rate`, `avg_rating`, `rating_count`, `bookmark_count`, `avg_attempts_to_solve`). |
+| `categories` | Problem category/topic lookup table. | 
+| `companies` | Problem company/domain lookup table. | 
+| `interview_rounds` | Interview round lookup table. | 
+| `concepts` | Canonical concept lookup table for problem metadata. | 
+| `problem_concepts` | Many-to-many junction between problems and concepts. | 
+| `problem_similar_problems` | Problem similarity relationships. | 
+| `problem_next_level_problems` | Follow-on problem recommendations. | 
+| `problem_sources` | Problem source/reference table. | 
 | `sessions` | Interview sessions. C2-locked JSON columns `history` & `canvas_snapshots`; engine columns: `session_token`, `browser_id`, `device_id`, `ip_address`, `lock_version`, `started_at`, `paused_at`, `completed_at`, `last_heartbeat_at`, `last_activity_at`, `total_paused_seconds`, `idle_seconds`, `time_limit_minutes`, `attempt_number`, `autosave_state` JSON. Status: `active`, `paused`, `completed`, `cancelled`, `abandoned`, `expired`. Indexes: `(user_id, status)`, `(problem_id)`. |
 | `session_events` | Activity log per session (started/paused/resumed/recovered/finished/cancelled/abandoned + details). Powers replay & audit. |
 | `feedback` | C2 feedback reports, 1:1 with sessions. `scores` JSON (5 locked keys), `strengths`, `improvements`, `summary` + superset columns `architecture_feedback`, `communication_feedback`, `metadata`. |
@@ -116,9 +124,7 @@ audit_logs (standalone — survives deletes)
   an additive dev-environment safety net only. For manual Neon migration use
   [docs/neon_migration.sql](docs/neon_migration.sql) (re-runnable; verified
   against the live database via a rolled-back dry run).
-- The live Neon `problems.meta` / `problems.stats` JSONB columns are
-  **deprecated**: the migration backfills them into the flat columns above,
-  which are canonical. Don't write to the JSONB columns from new code.
+- The live Neon schema normalizes problem metadata into lookup tables and flattened columns. Legacy `problems.meta` / `problems.stats` JSONB blobs have been replaced by canonical fields and junction tables; new code should use the normalized schema.
 
 ---
 
