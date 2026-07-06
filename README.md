@@ -2,13 +2,8 @@
 
 FastAPI + SQLAlchemy + PostgreSQL backend for **Archie**, the AI interview
 platform. This module owns **session handling, the interview engine, the
-problem catalog, rankings, history/analytics and feedback persistence**
-(C2 contract scope: backend owner).
+problem catalog, rankings, history/analytics and feedback persistence**.
 
-- **Local dev & Railway deployment guide:** [DEPLOYMENT.md](DEPLOYMENT.md)
-- **Architecture review:** [docs/ARCHITECTURE_REVIEW.md](docs/ARCHITECTURE_REVIEW.md)
-- **C2 compliance report:** [docs/C2_COMPLIANCE_REPORT.md](docs/C2_COMPLIANCE_REPORT.md)
-- **Gap analysis:** [docs/GAP_ANALYSIS.md](docs/GAP_ANALYSIS.md)
 
 ---
 
