@@ -390,7 +390,7 @@ best time per problem: `GET /problems/{id}/stats`.
 
 | Endpoint | Description |
 |---|---|
-| `POST /api/v1/sessions/` | Create-or-return session per (user, problem). Body `{"problem_id", "user_id?"}`. |
+| `POST /api/v1/sessions/` | Create session. Body: `{"problem_id", "user_id?"}`. Returns **404** if the referenced problem does not exist. |
 | `GET /api/v1/sessions/?user_id=&limit=&offset=` | List sessions (newest first). |
 | `GET /api/v1/sessions/{id}?limit=N` | Session with history/canvas (optionally last N). |
 | `POST /api/v1/sessions/{id}/turns` | `{"text", "c1Snapshot?"}` — persists turn, streams interviewer reply (SSE). |
@@ -467,7 +467,61 @@ See [.env.example](.env.example). Summary:
 
 ---
 
-## 7. Future expansion notes
+## 7. Endpoint Smoke-Test Script
+
+A ready-to-run smoke-test script is included at [`scripts/check_endpoints.py`](scripts/check_endpoints.py).
+It tests **all 46 endpoints** (user + admin + health) against the live Railway deployment and prints a
+colour-coded summary table. An optional Markdown report can also be generated.
+
+### Prerequisites
+
+```bash
+pip install requests
+```
+
+(`requests>=2.31.0` is also listed in `requirements.txt`.)
+
+### Usage
+
+```bash
+# Quick check against production (reads API keys from env)
+export API_KEY=YOUR_API_KEY
+export ADMIN_API_KEY=YOUR_ADMIN_API_KEY
+python scripts/check_endpoints.py
+
+# Pass keys directly and save a Markdown report
+python scripts/check_endpoints.py \
+    --base-url https://web-production-3b743.up.railway.app \
+    --api-key  YOUR_API_KEY \
+    --admin-key YOUR_ADMIN_API_KEY \
+    --report endpoint_status_report.md
+```
+
+### What it tests
+
+| Category | Endpoints tested | Auth used |
+|---|---|---|
+| Health | `GET /`, `/health`, `/health/db` | None |
+| Auth boundary | Rejects requests with no key | None (expect 401/403) |
+| Users | Create, list, get by ID | `X-API-Key` |
+| Problems (user) | List, trending, daily-challenge, recommended, bookmarks, recently-viewed, get, stats, rate, bookmark | `X-API-Key` |
+| Problems (admin) | Audit-logs, create, update, delete; invalid-key rejection | `X-Admin-API-Key` |
+| Sessions (CRUD) | Create, list, get, patch, send, feedback POST/GET | `X-API-Key` |
+| Interview lifecycle | start, active, heartbeat, pause, resume, autosave, finish, cancel, timer, state | `X-API-Key` |
+| Rankings | Leaderboard, my rank | `X-API-Key` |
+| History & analytics | History list, history detail, dashboard | `X-API-Key` |
+| Notifications | List, mark-read, mark-all-read, achievements | `X-API-Key` |
+
+### Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | All checks passed |
+| `1` | One or more checks failed |
+
+---
+
+## 8. Future expansion notes
 
 - **Normalize `history` → `conversation_messages`** after C2 (locked contract
   currently reads the JSON array).

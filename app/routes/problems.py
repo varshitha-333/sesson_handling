@@ -1,8 +1,10 @@
 import hashlib
+import logging
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, status, Header, Query
 from sqlalchemy import or_, func, cast, String
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas, security
@@ -11,7 +13,10 @@ from app.config import settings
 from app.services import analytics
 from app.services.session_engine import utcnow
 
+logger = logging.getLogger("backend.problems")
+
 router = APIRouter(prefix="/problems", tags=["problems"])
+
 
 SORTABLE = {
     "created_at": models.Problem.created_at,
@@ -363,7 +368,19 @@ def create_problem(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail=f"Problem with ID '{problem_in.id}' already exists.")
     creator = x_admin_user or settings.ADMIN_USERNAME
-    return map_problem(crud.create_problem(db, problem_in, creator=creator))
+    try:
+        return map_problem(crud.create_problem(db, problem_in, creator=creator))
+    except (IntegrityError, OperationalError) as exc:
+        db.rollback()
+        logger.error("DB error creating problem '%s': %s", problem_in.id, exc)
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=(
+                f"Database error creating problem '{problem_in.id}'. "
+                "This may indicate a schema mismatch between the application model and the "
+                "live database. Check that all required columns exist and match the model definition."
+            ),
+        )
 
 
 @router.patch("/{problem_id}", response_model=schemas.ProblemResponse)

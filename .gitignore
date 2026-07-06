@@ -36,4 +36,6 @@ DEPLOYMENT.md
 FINAL_BACKEND_REPORT.md
 PROJECT_OVERVIEW.md
 docs/
-
+endpoint_smoke_test_full_results.txt
+endpoint_smoke_test_results.txt
+endpoint_smoke_test_retry.txt
