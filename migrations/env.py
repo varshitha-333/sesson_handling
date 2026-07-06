@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from alembic import context
@@ -9,6 +10,20 @@ from app.database import Base
 from app import models  # noqa: F401  (registers all tables on Base.metadata)
 
 config = context.config
+
+# Fail fast with a clear message when deployed without a real DATABASE_URL.
+# On Railway the .env file is not deployed (gitignored), so the variable MUST
+# be set on the service (Variables tab); otherwise settings fall back to the
+# localhost default and the connection fails cryptically after a long timeout.
+_DEFAULT_LOCAL = "postgresql://postgres:postgres@localhost:5432/archie_db"
+if settings.DATABASE_URL == _DEFAULT_LOCAL and (
+        "RAILWAY_ENVIRONMENT" in os.environ or settings.ENVIRONMENT == "production"):
+    raise RuntimeError(
+        "DATABASE_URL is not set. Add it in Railway -> service -> Variables "
+        "(your Neon connection string, or ${{Postgres.DATABASE_URL}} if using "
+        "Railway Postgres). The .env file is gitignored and is NOT deployed."
+    )
+
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 if config.config_file_name is not None:
