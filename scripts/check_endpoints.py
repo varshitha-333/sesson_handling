@@ -155,17 +155,16 @@ class EndpointChecker:
                   headers={**self._user(), "X-Admin-API-Key": "wrong-key"}, note="invalid key -> 401/403")
         # Create problem (admin only)
         # Expected codes:
-        #   201 = created successfully (after fix is deployed to Railway)
+        #   201 = created successfully
         #   400 = already exists from a previous test run
-        #   422 = DB schema mismatch: category_id FK not populated (fix in crud.py awaits Railway redeploy)
-        self._req("POST", "/api/v1/problems/", "admin", [201, 400, 422], self._admin(),
+        self._req("POST", "/api/v1/problems/", "admin", [201, 400], self._admin(),
                   json={
                       "id": DUMMY_PROBLEM_ADMIN_ID,
                       "title": "Smoke Test Problem (Admin)",
                       "description": "Created by smoke test. Safe to delete.",
                       "requirements": {"functional": "None"},
                       "constraints": ["none"],
-                      "difficulty": "Easy",
+                      "difficulty": "easy",
                       "category": "Smoke Test",
                       "status": "draft",
                       "estimated_time": 30,
