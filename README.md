@@ -218,6 +218,40 @@ API_KEY=your_key ADMIN_API_KEY=your_admin_key curl -H "X-API-Key: $API_KEY" -H "
 ```
 
 If you want to test admin creation, add `-H "Content-Type: application/json"` and a JSON body.
+
+### Production base URL
+
+The production backend is hosted at: `https://web-production-3b743.up.railway.app`
+
+Use this as the base URL for all API requests in production. Example curl calls using the production URL:
+
+```bash
+# Health
+curl https://web-production-3b743.up.railway.app/health
+
+# Problems list (user)
+curl -H "X-API-Key: $API_KEY" \
+  "https://web-production-3b743.up.railway.app/api/v1/problems/?limit=3"
+
+# Start session (user)
+curl -X POST -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
+  -d '{"problem_id":"design-whatsapp","user_id":"user-123","browser_id":"tab1"}' \
+  https://web-production-3b743.up.railway.app/api/v1/sessions/start
+
+# Admin create problem (admin)
+curl -X POST \
+  -H "X-API-Key: $API_KEY" \
+  -H "X-Admin-API-Key: $ADMIN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"New Problem","slug":"design-new-system","difficulty":"Medium","category":"System Design","status":"published","requirements":{"functional":"..."} }' \
+  https://web-production-3b743.up.railway.app/api/v1/problems/
+```
+
+Placeholders:
+- `API_KEY` — your client API key (set in Railway variables)
+- `ADMIN_API_KEY` — your admin API key (set in Railway variables)
+
+Ensure the `CORS_ORIGINS` setting in the service variables includes the frontend origin if calling from a browser.
 ### Error shape (all endpoints)
 
 ```json
