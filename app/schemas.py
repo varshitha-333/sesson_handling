@@ -81,9 +81,11 @@ class ProblemBase(BaseModel):
     id: str = Field(..., description="Unique slug for the problem, e.g., 'design-parking-lot'")
     title: str
     description: str
-    # Dict for the new schema; legacy seeded rows store a list of strings
-    requirements: Union[Dict[str, str], List[str]] = Field(default_factory=dict)
-    constraints: List[str] = Field(default_factory=list)
+    # The live catalog stores several shapes: dict of str->str, dict of
+    # str->list[str] (e.g. {"functional": [...], "deliverables": [...]}),
+    # or a plain list of strings. Accept all of them.
+    requirements: Union[Dict[str, Any], List[str]] = Field(default_factory=dict)
+    constraints: Union[List[str], Dict[str, Any]] = Field(default_factory=list)
     difficulty: str = "Medium"
     category: str = "General"
     subcategory: Optional[str] = None
@@ -99,8 +101,8 @@ class ProblemCreate(ProblemBase):
 class ProblemUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    requirements: Optional[Union[Dict[str, str], List[str]]] = None
-    constraints: Optional[List[str]] = None
+    requirements: Optional[Union[Dict[str, Any], List[str]]] = None
+    constraints: Optional[Union[List[str], Dict[str, Any]]] = None
     difficulty: Optional[str] = None
     category: Optional[str] = None
     subcategory: Optional[str] = None
