@@ -169,7 +169,7 @@ Use `X-Admin-API-Key` for protected admin endpoints.
 curl -H "X-API-Key: $API_KEY" \
   -H "X-Admin-API-Key: $ADMIN_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"title":"New Problem","slug":"design-new-system","difficulty":"Medium","category":"System Design","status":"published","requirements":{"functional":"..."},"constraints":["..."],"company":"Acme","meta":{"interview_round":"onsite","key_concepts":["APIs"]},"stats":{"attempts":0,"completions":0,"success_rate":0,"avg_rating":0,"rating_count":0,"bookmark_count":0,"avg_attempts_to_solve":0}}' \
+  -d '{"id":"design-new-system","title":"New Problem","difficulty":"easy","category":"System Design","status":"draft","description":"Design a scalable system.","requirements":{"functional":"..."},"constraints":["...."],"estimated_time":45,"company":"Acme","meta":{"interview_round":"Backend Round","key_concepts":["APIs"],"similar_problems":[],"why_this_problem":"","what_youll_learn":[],"next_level_problems":[],"sources":[]}}' \
   https://<your-service>.up.railway.app/api/v1/problems/
 ```
 
@@ -335,7 +335,7 @@ All examples assume header `X-API-Key: <API_KEY>` (admin endpoints:
 {
   "id": "design-whatsapp", "title": "Design WhatsApp / Chat Messenger",
   "description": "…", "requirements": {"functional": "…"}, "constraints": ["…"],
-  "difficulty": "Medium", "category": "System Design", "subcategory": null,
+  "difficulty": "medium", "category": "System Design", "subcategory": null,
   "estimated_time": 45, "company": "Meta", "status": "published",
   "meta": {
     "interview_round": "onsite",
@@ -470,8 +470,10 @@ See [.env.example](.env.example). Summary:
 ## 7. Endpoint Smoke-Test Script
 
 A ready-to-run smoke-test script is included at [`scripts/check_endpoints.py`](scripts/check_endpoints.py).
-It tests **all 46 endpoints** (user + admin + health) against the live Railway deployment and prints a
-colour-coded summary table. An optional Markdown report can also be generated.
+It tests **all 46 endpoints** across **48 checks** (user + admin + health) against the live Railway deployment and prints a
+summary table. An optional Markdown report can also be generated.
+
+> **Note:** `difficulty` must be lowercase (`easy` / `medium` / `hard`) — enforced by a CHECK constraint on the live database.
 
 ### Prerequisites
 
