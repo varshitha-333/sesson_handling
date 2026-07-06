@@ -1,5 +1,6 @@
 import uuid
 import json
+import logging
 from datetime import datetime, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
@@ -10,8 +11,10 @@ from app.database import get_db, SessionLocal
 from app.services.interviewer import InterviewerService
 from app.services.cache import session_cache
 
+logger = logging.getLogger("backend.sessions")
+
 router = APIRouter(
-    prefix="/api/sessions",
+    prefix="/sessions",
     tags=["sessions"],
     dependencies=[Depends(security.verify_api_key)]
 )
@@ -90,6 +93,7 @@ def read_session(
             return schemas.SessionResponse(
                 session_id=cached_response.session_id,
                 user_id=cached_response.user_id,
+                problem_id=cached_response.problem_id,
                 status=cached_response.status,
                 history=sliced_history,
                 canvas_snapshots=sliced_snapshots
@@ -142,7 +146,7 @@ def post_turn(
     session = crud.get_session(db, session_id)
     if not session:
         raise HTTPException(
-            status_code=status.HTTP_444_NOT_FOUND if hasattr(status, "HTTP_444_NOT_FOUND") else status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Session with ID '{session_id}' not found."
         )
     
@@ -269,7 +273,10 @@ def update_session(
 ):
     session = crud.get_session(db, session_id)
     if not session:
-        # Create session if it doesn't exist (e.g. if canvas save arrives before chat initialization)
+        # Legacy behavior kept for frontend compatibility: auto-create a session
+        # if a canvas save arrives before chat initialization. Logged because it
+        # usually indicates a client-side ordering bug.
+        logger.warning("PATCH /sessions/%s auto-created a session (canvas save before init)", session_id)
         session = models.Session(
             id=session_id,
             problem_id="design-rate-limiter",
@@ -328,36 +335,35 @@ def save_session_feedback(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Session with ID '{session_id}' not found."
         )
-    
-    # Check if feedback already exists
-    existing = db.query(models.Feedback).filter(models.Feedback.session_id == session_id).first()
-    if existing:
-        existing.scores = feedback_in.scores.dict()
-        existing.strengths = feedback_in.strengths
-        existing.improvements = feedback_in.improvements
-        existing.summary = feedback_in.summary
-        existing.architecture_feedback = feedback_in.architecture_feedback.dict() if feedback_in.architecture_feedback else None
-        existing.communication_feedback = feedback_in.communication_feedback.dict() if feedback_in.communication_feedback else None
-        existing.feedback_metadata = feedback_in.feedback_metadata.dict() if feedback_in.feedback_metadata else None
-        db.commit()
-        db.refresh(existing)
-        return map_feedback_to_response(existing)
-        
-    # Save feedback record to PostgreSQL
-    feedback_record = models.Feedback(
-        session_id=session_id,
-        scores=feedback_in.scores.dict(),
-        strengths=feedback_in.strengths,
-        improvements=feedback_in.improvements,
-        summary=feedback_in.summary,
-        architecture_feedback=feedback_in.architecture_feedback.dict() if feedback_in.architecture_feedback else None,
-        communication_feedback=feedback_in.communication_feedback.dict() if feedback_in.communication_feedback else None,
-        feedback_metadata=feedback_in.feedback_metadata.dict() if feedback_in.feedback_metadata else None
-    )
-    db.add(feedback_record)
+
+    # Upsert the feedback record (locked C2 contract shape)
+    feedback_record = db.query(models.Feedback).filter(models.Feedback.session_id == session_id).first()
+    if not feedback_record:
+        feedback_record = models.Feedback(session_id=session_id)
+        db.add(feedback_record)
+    feedback_record.scores = feedback_in.scores.model_dump()
+    feedback_record.strengths = feedback_in.strengths
+    feedback_record.improvements = feedback_in.improvements
+    feedback_record.summary = feedback_in.summary
+    feedback_record.architecture_feedback = feedback_in.architecture_feedback.model_dump() if feedback_in.architecture_feedback else None
+    feedback_record.communication_feedback = feedback_in.communication_feedback.model_dump() if feedback_in.communication_feedback else None
+    feedback_record.feedback_metadata = feedback_in.feedback_metadata.model_dump() if feedback_in.feedback_metadata else None
     db.commit()
     db.refresh(feedback_record)
-    
+
+    # Ranking pipeline: scores arrived, so compute/refresh the evaluation for
+    # ranked (non-anonymous) sessions and re-check achievements.
+    if session.user_id:
+        try:
+            from app.services.ranking import compute_evaluation
+            from app.services.achievements import check_and_award
+            compute_evaluation(db, session, feedback_record)
+            db.commit()
+            check_and_award(db, session.user_id)
+        except Exception:
+            db.rollback()
+            logger.exception("Evaluation/achievement computation failed for session %s", session_id)
+
     return map_feedback_to_response(feedback_record)
 
 
@@ -367,7 +373,7 @@ def get_session_feedback(session_id: str, db: Session = Depends(get_db)):
     session = crud.get_session(db, session_id)
     if not session:
         raise HTTPException(
-            status_code=status.HTTP_444_NOT_FOUND if hasattr(status, "HTTP_444_NOT_FOUND") else status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Session with ID '{session_id}' not found."
         )
         

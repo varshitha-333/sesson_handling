@@ -5,7 +5,7 @@ from app import crud, schemas, security
 from app.database import get_db
 
 router = APIRouter(
-    prefix="/api/users",
+    prefix="/users",
     tags=["users"],
     dependencies=[Depends(security.verify_api_key)]
 )

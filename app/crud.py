@@ -1,25 +1,6 @@
 from datetime import datetime, timezone
-from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from app import models, schemas
-
-def get_problems(db: Session, search: str = None, status: str = "published", limit: int = None, offset: int = None):
-    query = db.query(models.Problem)
-    if status != "all":
-        query = query.filter(models.Problem.status == status)
-    if search:
-        search_filter = f"%{search}%"
-        query = query.filter(
-            or_(
-                models.Problem.title.ilike(search_filter),
-                models.Problem.description.ilike(search_filter)
-            )
-        )
-    if offset is not None:
-        query = query.offset(offset)
-    if limit is not None:
-        query = query.limit(limit)
-    return query.all()
 
 def get_problem(db: Session, problem_id: str):
     return db.query(models.Problem).filter(models.Problem.id == problem_id).first()
@@ -35,7 +16,15 @@ def create_problem(db: Session, problem: schemas.ProblemCreate, creator: str = "
         category=problem.category,
         subcategory=problem.subcategory,
         estimated_time=problem.estimated_time,
+        company=problem.company or "Practice",
         status=problem.status,
+        interview_round=problem.meta.interview_round,
+        key_concepts=problem.meta.key_concepts,
+        similar_problems=problem.meta.similar_problems,
+        why_this_problem=problem.meta.why_this_problem,
+        what_youll_learn=problem.meta.what_youll_learn,
+        next_level_problems=problem.meta.next_level_problems,
+        sources=problem.meta.sources,
         version=1,
         created_by=creator,
         updated_by=creator
@@ -67,7 +56,7 @@ def update_problem(db: Session, problem_id: str, problem_update: schemas.Problem
     if not db_problem:
         return None
     
-    update_data = problem_update.dict(exclude_unset=True)
+    update_data = problem_update.model_dump(exclude_unset=True)
     old_values = {}
     new_values = {}
     
@@ -177,16 +166,64 @@ def get_sessions(db: Session, user_id: str = None, limit: int = None, offset: in
     query = db.query(models.Session)
     if user_id:
         query = query.filter(models.Session.user_id == user_id)
+    query = query.order_by(models.Session.created_at.desc())
     if offset is not None:
         query = query.offset(offset)
     if limit is not None:
         query = query.limit(limit)
     return query.all()
 
-def save_session(db: Session, db_session: models.Session):
+# --- Library features: ratings / bookmarks / recently viewed ---
+
+def upsert_rating(db: Session, user_id: str, problem_id: str, rating: int):
+    if not db.query(models.User).filter(models.User.id == user_id).first():
+        db.add(models.User(id=user_id))
+        db.flush()
+    record = db.query(models.ProblemRating).filter_by(user_id=user_id, problem_id=problem_id).first()
+    if record:
+        record.rating = rating
+    else:
+        record = models.ProblemRating(user_id=user_id, problem_id=problem_id, rating=rating)
+        db.add(record)
+    db.flush()
+
+    # Recompute denormalized aggregates on the problem
+    from sqlalchemy import func
+    avg, count = db.query(func.avg(models.ProblemRating.rating),
+                          func.count(models.ProblemRating.id)) \
+        .filter(models.ProblemRating.problem_id == problem_id).one()
+    problem = db.query(models.Problem).filter(models.Problem.id == problem_id).first()
+    problem.avg_rating = round(float(avg or 0), 2)
+    problem.rating_count = int(count or 0)
     db.commit()
-    db.refresh(db_session)
-    return db_session
+    return record
+
+def toggle_bookmark(db: Session, user_id: str, problem_id: str) -> bool:
+    if not db.query(models.User).filter(models.User.id == user_id).first():
+        db.add(models.User(id=user_id))
+        db.flush()
+    problem = db.query(models.Problem).filter(models.Problem.id == problem_id).first()
+    existing = db.query(models.Bookmark).filter_by(user_id=user_id, problem_id=problem_id).first()
+    if existing:
+        db.delete(existing)
+        problem.bookmark_count = max(0, (problem.bookmark_count or 0) - 1)
+        db.commit()
+        return False
+    db.add(models.Bookmark(user_id=user_id, problem_id=problem_id))
+    problem.bookmark_count = (problem.bookmark_count or 0) + 1
+    db.commit()
+    return True
+
+def touch_recently_viewed(db: Session, user_id: str, problem_id: str):
+    if not db.query(models.User).filter(models.User.id == user_id).first():
+        db.add(models.User(id=user_id))
+        db.flush()
+    record = db.query(models.RecentlyViewed).filter_by(user_id=user_id, problem_id=problem_id).first()
+    if record:
+        record.viewed_at = datetime.now(timezone.utc)
+    else:
+        db.add(models.RecentlyViewed(user_id=user_id, problem_id=problem_id))
+    db.commit()
 
 def seed_problems(db: Session):
     # Only seed if no problems exist in catalog
@@ -468,6 +505,37 @@ def seed_problems(db: Session):
         )
     ]
 
+    # Sample meta enrichment for a few seeded problems (new catalog schema)
+    seed_meta = {
+        "design-url-shortener": {
+            "company": "Google", "interview_round": "phone-screen",
+            "key_concepts": ["Hashing", "Caching", "Database Sharding"],
+            "similar_problems": ["design-rate-limiter"],
+            "why_this_problem": "A classic warm-up that tests estimation, key generation and read-heavy scaling.",
+            "what_youll_learn": ["Short-code generation strategies", "Read-heavy caching", "Redirect latency budgets"],
+            "next_level_problems": ["design-twitter"],
+            "sources": ["https://github.com/donnemartin/system-design-primer"],
+        },
+        "design-whatsapp": {
+            "company": "Meta", "interview_round": "onsite",
+            "key_concepts": ["WebSockets", "Message Queues", "Fan-out"],
+            "similar_problems": ["design-notification-system"],
+            "why_this_problem": "Tests real-time delivery, connection persistence and write-optimized storage.",
+            "what_youll_learn": ["Delivery receipts", "Fan-out-on-write vs read", "E2E encryption basics"],
+            "next_level_problems": ["design-youtube"],
+            "sources": ["https://github.com/donnemartin/system-design-primer"],
+        },
+        "design-rate-limiter": {
+            "company": "Stripe", "interview_round": "phone-screen",
+            "key_concepts": ["Token Bucket", "Sliding Window", "Redis"],
+            "similar_problems": ["design-api-gateway"],
+            "why_this_problem": "Small surface area but deep tradeoffs — ideal for algorithmic system design.",
+            "what_youll_learn": ["Rate limiting algorithms", "Distributed counters", "Low-latency checks"],
+            "next_level_problems": ["design-distributed-cache"],
+            "sources": ["https://github.com/donnemartin/system-design-primer"],
+        },
+    }
+
     for p in sample_problems:
         p.difficulty = "Medium"
         p.category = "System Design"
@@ -476,5 +544,7 @@ def seed_problems(db: Session):
         p.version = 1
         p.created_by = "system"
         p.updated_by = "system"
+        for key, value in seed_meta.get(p.id, {}).items():
+            setattr(p, key, value)
         db.add(p)
     db.commit()

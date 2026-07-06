@@ -1,63 +1,85 @@
+import json
+import uuid
+import logging
+from datetime import datetime, timezone
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, BackgroundTasks
+from typing import List, Dict, Any, Optional
+
+import httpx
+from fastapi import FastAPI, BackgroundTasks, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import engine, Base, verify_db_connection, SessionLocal
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
 from app import crud, models
 from app.config import settings
-from app.routes import problems, sessions, users
+from app.database import engine, verify_db_connection, schema_sync, SessionLocal, get_db
+from app.errors import register_error_handlers
+from app.rate_limit import RateLimitMiddleware
+from app.routes import problems, sessions, users, lifecycle, rankings, history, notifications
 from app.services.cache import session_cache
+from app.services.achievements import seed_achievements
+
+logger = logging.getLogger("backend.main")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Skip database initialization if we are running in testing mode
+    # Skip database initialization when running in testing mode
     if not settings.TESTING:
-        # 1. Verify connection to PostgreSQL on startup
-        # This will fail and crash the application if connection cannot be established
+        # 1. Verify connectivity (crashes startup on failure — fail fast)
         verify_db_connection()
-        
-        # 2. Create tables in PostgreSQL database
-        Base.metadata.create_all(bind=engine)
-        
-        # 3. Seed initial problems into catalog
+        # 2. Create missing tables / add missing columns (dev safety net;
+        #    production releases run `alembic upgrade head` first)
+        schema_sync()
+        # 3. Seed initial catalog + achievements
         db = SessionLocal()
         try:
             crud.seed_problems(db)
+            seed_achievements(db)
         finally:
             db.close()
-        
     yield
 
-from pydantic import BaseModel
-from typing import List, Dict, Any, Optional, Union
-import httpx
-import json
-import uuid
-from datetime import datetime, timezone
-from fastapi import Depends
-from fastapi.responses import StreamingResponse
-from sqlalchemy.orm import Session
-from app.database import get_db
 
 app = FastAPI(
     title="Archie Backend",
-    description="Python FastAPI backend for Archie",
-    version="1.0.0",
-    lifespan=lifespan
+    description="FastAPI backend for Archie — session handling, interview engine, "
+                "problem catalog, rankings, history and analytics.",
+    version="2.0.0",
+    lifespan=lifespan,
 )
 
-# CORS configuration to allow local/web clients to connect securely
-app.add_middleware(
-    CORSMiddleware,
-    allow_origin_regex="https?://.*",
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS: pinned origins via CORS_ORIGINS env (comma-separated); "*" keeps the
+# permissive dev behavior using a regex so credentials still work.
+if settings.CORS_ORIGINS.strip() == "*":
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex="https?://.*",
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origin_list,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-# --- Chat Schema ---
+app.add_middleware(RateLimitMiddleware)
+register_error_handlers(app)
+
+
+# --- Chat Schema (legacy /chat proxy) ---
 class ChatMessageSchema(BaseModel):
     role: str
     content: str
+
 
 class ChatRequestSchema(BaseModel):
     session_id: str
@@ -74,24 +96,25 @@ class ChatRequestSchema(BaseModel):
             return self.history
         return []
 
+
 def resolve_problem_id(db: Session, problem_input: Any) -> str:
-    title = ""
     if isinstance(problem_input, str):
         title = problem_input
     elif isinstance(problem_input, dict) and "title" in problem_input:
         title = problem_input["title"]
     else:
         title = str(problem_input)
-        
-    problems = db.query(models.Problem).all()
-    for p in problems:
-        if p.id.lower() in title.lower() or p.title.lower() in title.lower():
-            return p.id
+
+    title_lower = title.lower()
+    problems_list = db.query(models.Problem.id, models.Problem.title).all()
+    for pid, ptitle in problems_list:
+        if pid.lower() in title_lower or ptitle.lower() in title_lower:
+            return pid
     return "design-rate-limiter"
 
-# Combined /chat persistence and AI routing proxy
-def save_assistant_message_chat(session_id: str, text: str):
-    if not text.strip():
+
+def save_assistant_message_chat(session_id: str, text_content: str):
+    if not text_content.strip():
         return
     db_new = SessionLocal()
     try:
@@ -99,7 +122,7 @@ def save_assistant_message_chat(session_id: str, text: str):
         if session_in_db:
             ai_msg = {
                 "role": "assistant",
-                "content": text.strip(),
+                "content": text_content.strip(),
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
             current_hist = list(session_in_db.history or [])
@@ -109,12 +132,15 @@ def save_assistant_message_chat(session_id: str, text: str):
             session_cache.invalidate(f"session:{session_id}")
     except Exception:
         db_new.rollback()
+        logger.exception("Failed to persist assistant message for session %s", session_id)
     finally:
         db_new.close()
 
+
 # Combined /chat persistence and AI routing proxy
 @app.post("/chat")
-async def chat_endpoint(request: ChatRequestSchema, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+async def chat_endpoint(request: ChatRequestSchema, background_tasks: BackgroundTasks,
+                        db: Session = Depends(get_db)):
     # 1. Fetch or create session in database
     db_session = crud.get_session(db, request.session_id)
     if not db_session:
@@ -129,7 +155,7 @@ async def chat_endpoint(request: ChatRequestSchema, background_tasks: Background
         db.add(db_session)
         db.commit()
         db.refresh(db_session)
-        
+
     # 2. Append user's new message to database history
     user_msg = {
         "role": "user",
@@ -139,7 +165,7 @@ async def chat_endpoint(request: ChatRequestSchema, background_tasks: Background
     current_history = list(db_session.history or [])
     current_history.append(user_msg)
     db_session.history = current_history
-    
+
     # 3. Append canvas snapshot if provided
     if request.canvas_snapshot:
         snapshot = {
@@ -149,16 +175,15 @@ async def chat_endpoint(request: ChatRequestSchema, background_tasks: Background
         current_snapshots = list(db_session.canvas_snapshots or [])
         current_snapshots.append(snapshot)
         db_session.canvas_snapshots = current_snapshots
-        
+
+    # Turn activity also counts as liveness for the interview engine
+    db_session.last_activity_at = datetime.now(timezone.utc)
     db.commit()
     session_cache.invalidate(f"session:{request.session_id}")
-    
-    # 4. Stream response from local AI engine (port 8001)
+
+    # 4. Stream response from the AI engine
     async def sse_forwarder():
         accumulated_text = ""
-        ai_engine_url = "http://127.0.0.1:8001/chat"
-        
-        # Prepare payload to send to the stateless AI engine
         history_list = request.get_history()
         payload = {
             "session_id": request.session_id,
@@ -167,21 +192,19 @@ async def chat_endpoint(request: ChatRequestSchema, background_tasks: Background
             "message": request.message,
             "canvas_snapshot": request.canvas_snapshot
         }
-        
+
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
-                async with client.stream("POST", ai_engine_url, json=payload) as response:
+                async with client.stream("POST", settings.AI_ENGINE_URL, json=payload) as response:
                     if response.status_code != 200:
                         err_msg = f"AI Engine error status: {response.status_code}"
                         yield f"data: {json.dumps({'error': err_msg})}\n\n"
                         yield "data: [DONE]\n\n"
                         return
-                        
+
                     async for line in response.aiter_lines():
                         if line:
                             yield line + "\n"
-                            
-                            # Accumulate text chunks to save to DB
                             if line.startswith("data: "):
                                 data_str = line[6:].strip()
                                 if data_str == "[DONE]":
@@ -193,21 +216,58 @@ async def chat_endpoint(request: ChatRequestSchema, background_tasks: Background
                                 except Exception:
                                     pass
         except Exception as e:
-            err_msg = f"Failed to connect to local AI Engine: {str(e)}"
+            err_msg = f"Failed to connect to AI Engine: {str(e)}"
             yield f"data: {json.dumps({'error': err_msg})}\n\n"
         finally:
-            # Save AI response to DB via BackgroundTasks
             background_tasks.add_task(save_assistant_message_chat, request.session_id, accumulated_text)
             yield "data: [DONE]\n\n"
-            
+
     return StreamingResponse(sse_forwarder(), media_type="text/event-stream")
 
-# Root endpoint for health checking
-@app.api_route("/", methods=["GET", "HEAD"])
-def read_root():
-    return {"status": "running", "service": "Archie Backend"}
 
-# Mount the routes
-app.include_router(problems.router)
-app.include_router(sessions.router)
-app.include_router(users.router)
+# --- Health endpoints (Railway healthcheck targets /health) ---
+
+@app.api_route("/", methods=["GET", "HEAD"], tags=["health"])
+def read_root():
+    return {"status": "running", "service": "Archie Backend", "version": app.version}
+
+
+@app.get("/health", tags=["health"])
+def health():
+    """Liveness probe — no dependencies, always fast."""
+    return {"status": "ok"}
+
+
+@app.get("/health/db", tags=["health"])
+def health_db():
+    """Readiness probe — verifies the database connection."""
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "connected"}
+    except Exception as e:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=503,
+                            content={"status": "degraded", "database": f"error: {e}"})
+
+
+# --- Router mounting ---
+# Canonical prefix is /api/v1; /api is kept as a backward-compatible alias so
+# existing frontend calls keep working. `lifecycle` is registered before
+# `sessions` so literal paths (/start, /active) win over /{session_id}.
+API_ROUTERS = [
+    lifecycle.router,
+    sessions.router,
+    problems.router,
+    users.router,
+    rankings.router,
+    history.history_router,
+    history.analytics_router,
+    notifications.router,
+    notifications.achievements_router,
+]
+
+for router in API_ROUTERS:
+    app.include_router(router, prefix="/api")
+for router in API_ROUTERS:
+    app.include_router(router, prefix="/api/v1")

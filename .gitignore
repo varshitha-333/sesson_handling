@@ -28,3 +28,12 @@ sample_session_response.json
 test_frontend_turn.py
 test_frontend_turns.py
 test_frontend_turns_with_response.py
+# Ignore documentation / audit files not required for users
+BACKEND_IMPLEMENTATION_OVERVIEW.md
+BACKEND_SCOPE_REPORT.md
+C2_CONTRACT_VERIFICATION.md
+DEPLOYMENT.md
+FINAL_BACKEND_REPORT.md
+PROJECT_OVERVIEW.md
+docs/
+migrations/
