@@ -88,6 +88,9 @@ class User(Base):
     id = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=True)
     email = Column(String, unique=True, index=True, nullable=True)
+    password_hash = Column(String, nullable=True)
+    auth_provider = Column(String, nullable=False, default="local")
+    google_id = Column(String, unique=True, index=True, nullable=True)
     created_at = Column(DateTime, nullable=False, default=utcnow)
 
     sessions = relationship("Session", back_populates="user")

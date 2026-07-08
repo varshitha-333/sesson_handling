@@ -17,6 +17,14 @@ class Settings(BaseSettings):
     ADMIN_API_KEY: str = Field("your-secret-admin-key-here", description="API Key for administrative routes")
     ADMIN_USERNAME: str = Field("admin", description="Default author name for admin changes")
 
+    # Authentication (Google OAuth2 + JWT)
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    JWT_SECRET_KEY: str = "change-me-to-a-random-secret-key"
+    JWT_ALGORITHM: str = "HS256"
+    JWT_EXPIRE_MINUTES: int = 15
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
     # CORS: comma-separated exact origins; "*" (default) keeps the permissive dev behavior
     CORS_ORIGINS: str = Field("*", description='Comma-separated allowed origins, e.g. "https://archie.app,https://staging.archie.app"')
 

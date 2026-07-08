@@ -18,7 +18,7 @@ from app.config import settings
 from app.database import engine, verify_db_connection, schema_sync, SessionLocal, get_db
 from app.errors import register_error_handlers
 from app.rate_limit import RateLimitMiddleware
-from app.routes import problems, sessions, users, lifecycle, rankings, history, notifications
+from app.routes import problems, sessions, users, lifecycle, rankings, history, notifications, auth
 from app.services.cache import session_cache
 from app.services.achievements import seed_achievements
 
@@ -256,6 +256,7 @@ def health_db():
 # existing frontend calls keep working. `lifecycle` is registered before
 # `sessions` so literal paths (/start, /active) win over /{session_id}.
 API_ROUTERS = [
+    auth.router,
     lifecycle.router,
     sessions.router,
     problems.router,

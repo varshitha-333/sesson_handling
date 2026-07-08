@@ -53,6 +53,39 @@ class UserResponse(UserBase):
         from_attributes = True
 
 
+# ─── Authentication Schemas ──────────────────────────────────────────────────
+
+class UserRegister(BaseModel):
+    name: str = Field(..., min_length=1, description="Display name")
+    email: str = Field(..., description="Email address")
+    password: str = Field(..., min_length=6, description="Password (min 6 characters)")
+
+
+class UserLogin(BaseModel):
+    email: str = Field(..., description="Email address")
+    password: str = Field(..., description="Password")
+
+
+class AuthUserResponse(BaseModel):
+    id: str
+    name: Optional[str] = None
+    email: Optional[str] = None
+    auth_provider: str = "local"
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: AuthUserResponse
+
+    class Config:
+        from_attributes = True
+
+
 # ---------------------------------------------------------------------------
 # Problem Schemas (new catalog schema: normalized lookups + flat stats)
 # ---------------------------------------------------------------------------

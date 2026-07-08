@@ -162,6 +162,12 @@ def get_user(db: Session, user_id: str):
 def get_users(db: Session):
     return db.query(models.User).all()
 
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email == email).first()
+
+def get_user_by_google_id(db: Session, google_id: str):
+    return db.query(models.User).filter(models.User.google_id == google_id).first()
+
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
         id=user.id,
