@@ -22,13 +22,21 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     # Check if columns already exist (Railway database may have them from previous migration)
     conn = op.get_bind()
+    from sqlalchemy import text
+    
+    # Helper function to check if column exists
+    def column_exists(table_name, column_name):
+        result = conn.execute(text(
+            f"SELECT 1 FROM information_schema.columns WHERE table_name = '{table_name}' AND column_name = '{column_name}'"
+        ))
+        return result.fetchone() is not None
     
     # Add password_hash column if it doesn't exist
-    if not conn.dialect.has_column(conn, "users", "password_hash"):
+    if not column_exists("users", "password_hash"):
         op.add_column("users", sa.Column("password_hash", sa.String(), nullable=True))
     
     # Add auth_provider column if it doesn't exist
-    if not conn.dialect.has_column(conn, "users", "auth_provider"):
+    if not column_exists("users", "auth_provider"):
         op.add_column(
             "users",
             sa.Column("auth_provider", sa.String(), nullable=False, server_default="local")
@@ -37,7 +45,7 @@ def upgrade() -> None:
         op.execute("UPDATE users SET auth_provider = 'local' WHERE auth_provider IS NULL")
     
     # Add google_id column if it doesn't exist
-    if not conn.dialect.has_column(conn, "users", "google_id"):
+    if not column_exists("users", "google_id"):
         op.add_column("users", sa.Column("google_id", sa.String(), nullable=True))
         # Create index only if column was just added
         op.create_unique_index(op.f("ix_users_google_id"), "users", ["google_id"])
