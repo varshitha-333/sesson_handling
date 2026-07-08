@@ -228,11 +228,13 @@ class SessionCreate(BaseModel):
 
 
 class SessionUpdate(BaseModel):
+    user_id: Optional[str] = Field(None, description="User ID for ownership verification")
     status: Optional[str] = Field(None, description="New status value, e.g., 'active' or 'completed'")
     canvas_state: Optional[Dict[str, Any]] = Field(None, description="Optional canvas layout snapshot containing node positions")
 
 
 class TurnRequest(BaseModel):
+    user_id: Optional[str] = Field(None, description="User ID for ownership verification")
     text: str = Field(..., description="User message/reply")
     c1Snapshot: Optional[Dict[str, Any]] = Field(None, description="Optional canvas diagram state snapshot")
 

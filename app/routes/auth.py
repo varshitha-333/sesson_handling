@@ -71,7 +71,7 @@ def register(payload: schemas.UserRegister, response: Response, db: Session = De
 
     return schemas.TokenResponse(
         access_token=access_token,
-        user=schemas.AuthUserResponse.model_validate(user),
+        user=schemas.AuthUserResponse.model_validate(user, from_attributes=True),
     )
 
 
@@ -108,7 +108,7 @@ def login(payload: schemas.UserLogin, response: Response, db: Session = Depends(
 
     return schemas.TokenResponse(
         access_token=access_token,
-        user=schemas.AuthUserResponse.model_validate(user),
+        user=schemas.AuthUserResponse.model_validate(user, from_attributes=True),
     )
 
 

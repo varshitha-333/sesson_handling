@@ -83,6 +83,7 @@ def read_sessions(
 def read_session(
     session_id: str,
     limit: Optional[int] = None,
+    user_id: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
     cache_key = f"session:{session_id}"
@@ -102,7 +103,7 @@ def read_session(
             )
         return cached_response
 
-    session = crud.get_session(db, session_id)
+    session = crud.get_session(db, session_id, user_id=user_id)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -145,7 +146,7 @@ def post_turn(
     db: Session = Depends(get_db)
 ):
     # Retrieve session
-    session = crud.get_session(db, session_id)
+    session = crud.get_session(db, session_id, user_id=turn_request.user_id)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -215,11 +216,17 @@ def post_turn(
     )
 
 @router.post("/{session_id}/send")
-def send_session_to_ai(session_id: str, db: Session = Depends(get_db)):
+def send_session_to_ai(session_id: str, user_id: Optional[str] = None, db: Session = Depends(get_db)):
     cache_key = f"session:{session_id}"
     cached_response = session_cache.get(cache_key)
-    
+
     if cached_response is not None:
+        # Verify ownership even for cached responses
+        if user_id and cached_response.user_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied: session belongs to another user"
+            )
         user_id = cached_response.user_id
         problem_id = cached_response.problem_id
         history = [
@@ -231,7 +238,7 @@ def send_session_to_ai(session_id: str, db: Session = Depends(get_db)):
             for c in cached_response.canvas_snapshots
         ]
     else:
-        session = crud.get_session(db, session_id)
+        session = crud.get_session(db, session_id, user_id=user_id)
         if not session:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -273,7 +280,7 @@ def update_session(
     session_update: schemas.SessionUpdate,
     db: Session = Depends(get_db)
 ):
-    session = crud.get_session(db, session_id)
+    session = crud.get_session(db, session_id, user_id=session_update.user_id)
     if not session:
         # Legacy behavior kept for frontend compatibility: auto-create a session
         # if a canvas save arrives before chat initialization. Logged because it
@@ -325,13 +332,103 @@ def map_feedback_to_response(feedback: models.Feedback) -> schemas.FeedbackRespo
     )
 
 
+@router.post("/{session_id}/feedback/generate", response_model=schemas.FeedbackResponse)
+async def generate_session_feedback(
+    session_id: str,
+    user_id: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """Generate feedback for a session using the FeedbackGenerator service."""
+    session = crud.get_session(db, session_id, user_id=user_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Session with ID '{session_id}' not found."
+        )
+
+    # Import FeedbackGenerator here to avoid circular imports
+    from app.services.feedback_generator import FeedbackGenerator
+    from app.schemas import CanvasSnapshot
+
+    # Build transcript from session history
+    transcript = "\n".join([f"{msg.get('role', 'user')}: {msg.get('content', '')}" for msg in (session.history or [])])
+
+    # Get latest message
+    latest_message = session.history[-1].get("content", "") if session.history else ""
+
+    # Get problem description
+    problem = session.problem_id or ""
+
+    # Build history for feedback generator
+    history = session.history or []
+
+    # Try to get canvas snapshot from session
+    canvas_snapshot = None
+    if session.canvas_snapshots and len(session.canvas_snapshots) > 0:
+        latest_snapshot = session.canvas_snapshots[-1]
+        # Handle both dict and object formats
+        if isinstance(latest_snapshot, dict):
+            latest_canvas = latest_snapshot.get('canvas_json')
+        else:
+            latest_canvas = getattr(latest_snapshot, 'canvas_json', None)
+
+        if latest_canvas:
+            try:
+                canvas_snapshot = CanvasSnapshot(**latest_canvas)
+            except Exception:
+                logger.warning(f"Failed to parse canvas snapshot for session {session_id}")
+
+    # Generate feedback
+    generator = FeedbackGenerator()
+    feedback_create = await generator.generate(
+        transcript=transcript,
+        latest_message=latest_message,
+        history=history,
+        problem=problem,
+        canvas_snapshot=canvas_snapshot,
+        rag_context="",
+        session_metadata={"session_id": session_id}
+    )
+
+    # Save feedback to database
+    feedback_record = db.query(models.Feedback).filter(models.Feedback.session_id == session_id).first()
+    if not feedback_record:
+        feedback_record = models.Feedback(session_id=session_id)
+        db.add(feedback_record)
+    
+    feedback_record.scores = feedback_create.scores.model_dump()
+    feedback_record.strengths = feedback_create.strengths
+    feedback_record.improvements = feedback_create.improvements
+    feedback_record.summary = feedback_create.summary
+    feedback_record.architecture_feedback = feedback_create.architecture_feedback.model_dump() if feedback_create.architecture_feedback else None
+    feedback_record.communication_feedback = feedback_create.communication_feedback.model_dump() if feedback_create.communication_feedback else None
+    feedback_record.feedback_metadata = feedback_create.feedback_metadata.model_dump() if feedback_create.feedback_metadata else None
+    db.commit()
+    db.refresh(feedback_record)
+
+    # Ranking pipeline
+    if session.user_id:
+        try:
+            from app.services.ranking import compute_evaluation
+            from app.services.achievements import check_and_award
+            compute_evaluation(db, session, feedback_record)
+            db.commit()
+            check_and_award(db, session.user_id)
+        except Exception:
+            db.rollback()
+            logger.exception("Evaluation/achievement computation failed for session %s", session_id)
+
+    return map_feedback_to_response(feedback_record)
+
+
 @router.post("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
 def save_session_feedback(
     session_id: str,
     feedback_in: schemas.FeedbackCreate,
+    user_id: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    session = crud.get_session(db, session_id)
+    session = crud.get_session(db, session_id, user_id=user_id)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -370,9 +467,9 @@ def save_session_feedback(
 
 
 @router.get("/{session_id}/feedback", response_model=schemas.FeedbackResponse)
-def get_session_feedback(session_id: str, db: Session = Depends(get_db)):
+def get_session_feedback(session_id: str, user_id: Optional[str] = None, db: Session = Depends(get_db)):
     # Verify session exists
-    session = crud.get_session(db, session_id)
+    session = crud.get_session(db, session_id, user_id=user_id)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

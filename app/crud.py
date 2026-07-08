@@ -208,8 +208,11 @@ def create_session(db: Session, session_create: schemas.SessionCreate):
     db.refresh(db_session)
     return db_session
 
-def get_session(db: Session, session_id: str):
-    return db.query(models.Session).filter(models.Session.id == session_id).first()
+def get_session(db: Session, session_id: str, user_id: str = None):
+    query = db.query(models.Session).filter(models.Session.id == session_id)
+    if user_id:
+        query = query.filter(models.Session.user_id == user_id)
+    return query.first()
 
 def get_sessions(db: Session, user_id: str = None, limit: int = None, offset: int = None):
     query = db.query(models.Session)
