@@ -1,7 +1,7 @@
 """Add authentication columns to users table.
 
-Revision ID: 0003_auth_columns
-Revises: 0002_neon_backfill
+Revision ID: 0004_auth_columns
+Revises: 0003_neon_backfill
 Create Date: 2026-07-08
 
 Adds password_hash, auth_provider, and google_id columns to support
@@ -13,8 +13,8 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-revision: str = "0003_auth_columns"
-down_revision: Union[str, None] = "0002_neon_backfill"
+revision: str = "0004_auth_columns"
+down_revision: Union[str, None] = "0003_neon_backfill"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

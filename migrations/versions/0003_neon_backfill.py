@@ -4,15 +4,15 @@ pre-existing JSONB `meta`/`stats` columns, add missing indexes and checks.
 PostgreSQL-only logic is dialect-guarded; on SQLite (dev) this is a no-op
 except for portable index creation. Safe to re-run (idempotent SQL).
 
-Revision ID: 0002_neon_backfill
-Revises: 0001_baseline
+Revision ID: 0003_neon_backfill
+Revises: 0002_session_engine
 Create Date: 2026-07-06
 """
 from alembic import op
 from sqlalchemy import text
 
-revision = "0002_neon_backfill"
-down_revision = "0001_baseline"
+revision = "0003_neon_backfill"
+down_revision = "0002_session_engine"
 branch_labels = None
 depends_on = None
 
